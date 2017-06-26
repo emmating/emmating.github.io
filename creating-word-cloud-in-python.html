@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="english" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Creating Word Cloud in Python - Welcome to Yanting's Data Science Blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="http://emmating.github.io/creating-word-cloud-in-python.html">
+
+        <meta name="author" content="Yanting Cao" />
+        <meta name="keywords" content="Python,Word Clouds,Text Analysis" />
+        <meta name="description" content="In text analysis, creating word clouds is a useful technique to visualize text data. Words bigger and bolder in size represent a higher frequency of occurance in word corpus. In other word, key words stand out and catch our eyes. The color of the text are generated randomly. It is …" />
+
+        <meta property="og:site_name" content="Welcome to Yanting's Data Science Blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Creating Word Cloud in Python"/>
+        <meta property="og:url" content="http://emmating.github.io/creating-word-cloud-in-python.html"/>
+        <meta property="og:description" content="In text analysis, creating word clouds is a useful technique to visualize text data. Words bigger and bolder in size represent a higher frequency of occurance in word corpus. In other word, key words stand out and catch our eyes. The color of the text are generated randomly. It is …"/>
+        <meta property="article:published_time" content="2017-06-22" />
+            <meta property="article:section" content="Projects" />
+            <meta property="article:tag" content="Python" />
+            <meta property="article:tag" content="Word Clouds" />
+            <meta property="article:tag" content="Text Analysis" />
+            <meta property="article:author" content="Yanting Cao" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://emmating.github.io/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
+    <link href="http://emmating.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://emmating.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://emmating.github.io/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://emmating.github.io/" class="navbar-brand">
+Welcome to Yanting's Data Science Blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="http://emmating.github.io/pages/about-me.html">
+                             About Me
+                          </a></li>
+                        <li class="active">
+                            <a href="http://emmating.github.io/category/projects.html">Projects</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://emmating.github.io/creating-word-cloud-in-python.html"
+                       rel="bookmark"
+                       title="Permalink to Creating Word Cloud in Python">
+                        Creating Word Cloud in Python
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2017-06-22T11:45:00-07:00"> Thu 22 June 2017</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://emmating.github.io/tag/python.html">Python</a>
+        /
+	<a href="http://emmating.github.io/tag/word-clouds.html">Word Clouds</a>
+        /
+	<a href="http://emmating.github.io/tag/text-analysis.html">Text Analysis</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>In text analysis, creating word clouds is a useful technique to visualize text data. Words bigger and bolder in size represent 
+a higher frequency of occurance in word corpus. In other word, key words stand out and catch our eyes. The color of the text are 
+generated randomly. </p>
+<p>It is very easy to create word cloud in Python using wordcloud package. I will use word cloud to visualize features and display address 
+of rental listings from the <a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries">Two Sigma Connect Competition</a> in the recent Kaggle Competition. </p>
+<h3>Import Packages and Read Data</h3>
+<p>Let's get started by importing the following packages and read the data</p>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">wordcloud</span> <span class="kn">import</span> <span class="n">WordCloud</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="s2">&quot;../Data/train.json&quot;</span><span class="p">)</span>
+</pre></div>
+
+
+<h3>Preprocess text data</h3>
+<p>Next, extract text data from 'feature' and 'display_address' columns in the dataframe</p>
+<div class="highlight"><pre><span></span>text = &#39;&#39;
+text_dispadd = &#39;&#39;
+for ind, row in train.iterrows():
+    for feature in row[&#39;features&#39;]:
+        text = &quot; &quot;.join([text, &quot;_&quot;.join(feature.strip().split(&quot; &quot;))])
+    text_dispadd = &quot; &quot;.join([text_dispadd,&quot;_&quot;.join(row[&#39;display_address&#39;].strip().split(&quot; &quot;))])
+text = text.strip()
+text_dispadd = text_dispadd.strip()
+</pre></div>
+
+
+<h3>Create word clouds</h3>
+<div class="highlight"><pre><span></span>plt.figure(figsize=(12,6))
+wc = WordCloud(background_color=&#39;white&#39;, 
+            width=600, 
+            height=300,
+            max_font_size=50, 
+            max_words=40).generate(text)
+plt.imshow(wc)
+plt.title(&quot;Features&quot;, fontsize=20)
+plt.axis(&quot;off&quot;)
+plt.show()
+</pre></div>
+
+
+<p>Thus we created the word cloud for rental listing features.
+We get a general sense of words used to describe features of rental listings in our training set.
+<img alt="alt text" src="images/feature_word_cloud.png"></p>
+<p>We can change the background color of word cloud by setting <code>background_color = 'black'</code> for display_address column. 
+There are some addresses that appear more frequent in our training set. 
+<img alt="alt text" src="images/display_address_word_cloud.png"></p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="http://emmating.github.io/images/profile_picture.png"/>
+        </p>
+</div><!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
+
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://www.linkedin.com/in/yanting-cao-a34ba726/"><i class="fa fa-linkedin-square fa-lg"></i> linkedin</a></li>
+    <li class="list-group-item"><a href="https://github.com/emmating"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Categories -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4>
+  <ul class="list-group" id="categories">
+    <li class="list-group-item">
+      <a href="http://emmating.github.io/category/projects.html"><i class="fa fa-folder-open fa-lg"></i>Projects</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Categories -->
+
+<!-- Sidebar/Tag Cloud -->
+<li class="list-group-item">
+  <a href="http://emmating.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <ul class="list-group " id="tags">
+    <li class="list-group-item tag-1">
+      <a href="http://emmating.github.io/tag/python.html">Python</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/word-clouds.html">Word Clouds</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/geopy.html">Geopy</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/text-analysis.html">Text Analysis</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/geoencode.html">Geoencode</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/spatial-data-analysis.html">Spatial Data Analysis</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/pelican.html">Pelican</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/googlev3.html">GoogleV3</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Tag Cloud -->
+
+<!-- Sidebar/Links -->
+<li class="list-group-item">
+  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+  <ul class="list-group" id="links">
+    <li class="list-group-item">
+      <a href="kaggle.com" target="_blank">Kaggle</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://rady.ucsd.edu/" target="_blank">Rady School of Management, UCSD</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://python.org/" target="_blank">Python.org</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://getpelican.com/" target="_blank">Pelican</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Links -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017 Yanting Cao
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://emmating.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://emmating.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://emmating.github.io/theme/js/respond.min.js"></script>
+
+    <script src="http://emmating.github.io/theme/js/bodypadding.js"></script>
+
+
+</body>
+</html>

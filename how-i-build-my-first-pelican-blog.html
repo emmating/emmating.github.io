@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="english" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>How I Build My First Pelican Blog - Welcome to Yanting's Data Science Blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="http://emmating.github.io/how-i-build-my-first-pelican-blog.html">
+
+        <meta name="author" content="Yanting Cao" />
+        <meta name="keywords" content="Python,Pelican" />
+        <meta name="description" content="After completed several data science projects, I am eager to document them and share them with people. It took me several days to research, set up and write my blog, but I feel it can be much easier and faster to build a Pelican blog, so I am sharing with …" />
+
+        <meta property="og:site_name" content="Welcome to Yanting's Data Science Blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="How I Build My First Pelican Blog"/>
+        <meta property="og:url" content="http://emmating.github.io/how-i-build-my-first-pelican-blog.html"/>
+        <meta property="og:description" content="After completed several data science projects, I am eager to document them and share them with people. It took me several days to research, set up and write my blog, but I feel it can be much easier and faster to build a Pelican blog, so I am sharing with …"/>
+        <meta property="article:published_time" content="2017-06-14" />
+            <meta property="article:section" content="Projects" />
+            <meta property="article:tag" content="Python" />
+            <meta property="article:tag" content="Pelican" />
+            <meta property="article:author" content="Yanting Cao" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="http://emmating.github.io/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
+    <link href="http://emmating.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="http://emmating.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://emmating.github.io/theme/css/style.css" type="text/css"/>
+
+
+
+
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="http://emmating.github.io/" class="navbar-brand">
+Welcome to Yanting's Data Science Blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="http://emmating.github.io/pages/about-me.html">
+                             About Me
+                          </a></li>
+                        <li class="active">
+                            <a href="http://emmating.github.io/category/projects.html">Projects</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="http://emmating.github.io/how-i-build-my-first-pelican-blog.html"
+                       rel="bookmark"
+                       title="Permalink to How I Build My First Pelican Blog">
+                        How I Build My First Pelican Blog
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2017-06-14T16:45:00-07:00"> Wed 14 June 2017</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="http://emmating.github.io/tag/python.html">Python</a>
+        /
+	<a href="http://emmating.github.io/tag/pelican.html">Pelican</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <p>After completed several data science projects, I am eager to document them and share them with people. 
+It took me several days to research, set up and write my blog, but I feel it can be much easier and faster 
+to build a Pelican blog, so I am sharing with you the lessons I have learned in building my first data science blog.  </p>
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="### Find a Static Site Generator">Find a Static Site Generator</a></li>
+<li><a href="### Basic Setup">Basic Setup</a><ul>
+<li><a href="#### Install and Activate Virtual Environment">Install and Activate Virtual Environment</a></li>
+<li><a href="#### Install Pelican under Virtual Environment">Install Pelican under Virtual Environment</a></li>
+<li><a href="#### Quickstart Your Site">Quickstart Your Site</a></li>
+</ul>
+</li>
+<li><a href="### Install Pelican Theme">Install Pelican Theme</a></li>
+<li><a href="### Write Content">Write Content</a></li>
+<li><a href="### Publish Your Site">Publish Your Site</a></li>
+<li><a href="### More Setup">More Setups</a><ul>
+<li><a href="#### Side Bar">Side Bar</a></li>
+<li><a href="#### Banner">Banner</a></li>
+</ul>
+</li>
+</ol>
+<h3>Find a Static Site Generator</h3>
+<p>There are lots of discussions on the Internet about pros and cons between static site and dynamic site <a href="http://www.codeconquest.com/website/static-vs-dynamic-websites/">static_vs_dynamic</a>. For me, 
+I am build a small size personal website, static site will fully meet my needs, and it is faster to load, and it allows 
+me to write blog posts in simple format, such as markdown file. So if you are write a small/medium personal site, go with 
+static! There are several static site generators to choose from, such as jekyll, nikola, etc. Recently, Pelicanis has gain lots of 
+popularity among the data science community, and I saw many people are moving their blogs to Pelican, so I choose to use Pelican, 
+it has lots of online resources and user community support, and it is built in my favorite Python language. </p>
+<h3>Basic Setup</h3>
+<p>Read official <a href="http://docs.getpelican.com/en/stable/">Pelican documentation</a> first, most of the questions can be found there. </p>
+<h4>Install and Activate Virtual Environment</h4>
+<p>A virtual environment is an isolated Python environment in which we store our Pelican blog site. We build an isolated environment 
+so that if we make changes or update a Python package or Python version outside the virtual environment, it does not affect the Python
+used in our Pelican site. 
+Steps are as follows: 
+- open your Linux terminal(I use git bash), install virtualenv, and activate virtualenv, after activation, you will see your Linux command
+start with(pelican)</p>
+<div class="highlight"><pre><span></span>pip install virtualenv
+virtualenv ~/virtualenvs/pelican
+cd ~/virtualenvs
+source ~/virtualenvs/pelican/Scripts/activate
+</pre></div>
+
+
+<h4>Install Pelican Under Virtual Environment</h4>
+<p>Next, we install Pelican under virtualenv, make sure (pelican) is shown at the beginning of your Linux command.
+The last four commands are optional, use them if you want to install Markdown, typogrify, update pelican, or read help file.</p>
+<div class="highlight"><pre><span></span>pip install pelican
+pip install Markdown
+pip install typogrify
+pip install –upgrade pelican
+pelican –help
+</pre></div>
+
+
+<h4>Quickstart Your Site</h4>
+<p>Quickstart your site, select your choices. 
+After the following command, you will see the output of your project location, <strong>write down the location</strong>, you will use it later. </p>
+<div class="highlight"><pre><span></span>pelican-quickstart
+</pre></div>
+
+
+<h3>Install Pelican Theme</h3>
+<p>Pelican comes with its default theme, but you can change your themes really easy from <a href="https://github.com/getpelican/pelican-themes">Pelican-themes github repo</a>. Before selecting the
+theme you want to install, take a look at the preview of various <a href="http://www.pelicanthemes.com/">Pelican themes</a>. I use the very popular <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3">bootstrap3 theme</a>, which comes with many 
+functions. I choose bootstrap3 theme particularly because it support IPython Notebook, it includes many more themes based on bootstrap3 which
+you can choose from <a href="http://bootswatch.com/">bootswatch</a>. Moreover, you can include a profile picture and a simple description of yourself.</p>
+<p>First, download or clone from the github repo containing the theme you want to use, next, install it to your Pelican blog by the following commmand
+The last two commands are optional which list themes installed.  <strong>write down the location where it is stored</strong>.</p>
+<div class="highlight"><pre><span></span>pelican-themes --install ~/virtualenvs/pelican-themes/boostrap3 --verbose
+pelican-themes –l # list themes installed
+pelican-themes –v –l # list themes installed with path
+</pre></div>
+
+
+<p>For a boostrap3 theme to work, you also need to install pelican-plugins from <a href="https://github.com/getpelican/pelican-plugins/tree/master/tag_cloud">this</a> github repo. Clone or copy the pelican-plugin folder, 
+add the following lines to pelicanconf.py located in ~/virtualenv/pelican folder. </p>
+<div class="highlight"><pre><span></span>THEME = &#39;path/to/bootstrap3/stored/pelican-bootstrap3&#39;
+JINJA_ENVIRONMENT = {&#39;extensions&#39;: [&#39;jinja2.ext.i18n&#39;]}
+PLUGIN_PATHS = [&#39;/path/to/git/pelican-plugins&#39;]
+PLUGINS = [&#39;i18n_subsites&#39;]
+</pre></div>
+
+
+<p>To select a theme from <a href="http://bootswatch.com/">bootswatch</a>: http://bootswatch.com/, all you need to do is add the following line to your pelicanconf.py
+    BOOTSTRAP_THEME = 'bootswatch_theme'</p>
+<h3>Write Content</h3>
+<p>Create three folders in your content folder, name them images, pages and posts, respectively. images folder stores all the images you want to use in your blog.
+Next, create a markdown file (about.md) and store in pages folder, where about_me is stored. In the end, create several markdown files in posts folder where each file contains 
+the content of a post. </p>
+<p>Include the following metadata in each of your markdown files.</p>
+<blockquote>
+<p>Title: How I Build My First Pelican Blog</p>
+<p>Date: 2017-06-14 16:00</p>
+<p>Modified: 2017-06-15 16:00 </p>
+<p>Category: Tutorials</p>
+<p>Tags: Python, Pelican</p>
+<p>Slug: my-super-post  </p>
+<p>Authors: Yanting Cao</p>
+<p>Summary: A tutorial of my first pelican blog</p>
+<p>Write my content here ...</p>
+</blockquote>
+<p>If you are not familar with markdown syntax, here is a <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet">link to a Markdown cheatsheet</a>. </p>
+<h3>Publish Your Site</h3>
+<p>We have gone this far, let's now take a look at our blog.</p>
+<div class="highlight"><pre><span></span>pelican ~/virtualenvs/pelican/content/ -s ~/virtualenvs/pelican/pelicanconf.py
+cd output
+python –m http.server
+</pre></div>
+
+
+<p>Once the basic server has been started, you can view your site at http://localhost:8000/</p>
+<h3>More setups</h3>
+<p>If you want to make your blog look better, I will teach you more setups, including side bar and banner (this specifically applies to bootstrap3 theme,
+if you use a different theme, refer to the descriptions in the theme's github repo)</p>
+<h4>Side Bar</h4>
+<p>Side bar has options including display an image, Social(github, linkedin, twitter, facebook, etc.), Categories, Tags and Links.</p>
+<p>Display an image on the side bar
+Save image in png file under 'content/images', add the following lines in your pelicanconf.py</p>
+<div class="highlight"><pre><span></span>PATH = &#39;content&#39;
+STATIC_PATHS = [&#39;images&#39;]
+AVATAR = &#39;images/side_bar_pic.png&#39;
+</pre></div>
+
+
+<p>Show Social Links
+Include the following lines in your pelicanconf.py</p>
+<div class="highlight"><pre><span></span>SOCIAL = ((&#39;twitter&#39;, &#39;http://twitter.com/youraccount&#39;, &#39;twitter&#39;),
+      (&#39;linkedin&#39;, &#39;http://www.linkedin.com/in/youraccount&#39;, &#39;linkedin&#39;),
+      (&#39;github&#39;, &#39;http://github.com/youraccount&#39;, &#39;github&#39;),
+      (&#39;stackoverflow&#39;, &#39;http://stackoverflow.com/users/youraccount&#39;, &#39;stack-overflow&#39;)
+</pre></div>
+
+
+<p>Show Tags
+Also in your pelicanconf.py, add the following codeconquest</p>
+<div class="highlight"><pre><span></span>DISPLAY_TAGS_ON_SIDEBAR = True
+PLUGINS = [&#39;tag_cloud&#39;]
+</pre></div>
+
+
+<p>Show Categories
+Add the following line to pelicanconf.py</p>
+<div class="highlight"><pre><span></span>DISPLAY_CATEGORIES_ON_SIDEBAR = True
+</pre></div>
+
+
+<p>Show Links
+Add the following line to pelicanconf.py    </p>
+<div class="highlight"><pre><span></span>LINKS = ((&#39;Kaggle&#39;,&#39;kaggle.com&#39;),
+     (&#39;Rady School of Management, UCSD&#39;, &#39;http://rady.ucsd.edu/&#39;),
+     (&#39;Python.org&#39;, &#39;http://python.org/&#39;),
+     (&#39;Pelican&#39;, &#39;http://getpelican.com/&#39;))
+</pre></div>
+
+
+<h4>Banner</h4>
+<p>Adding a banner image and subtitle to your blog by the following code</p>
+<div class="highlight"><pre><span></span>BANNER = &#39;/path/to/banner.png&#39;
+BANNER_SUBTITLE = &#39;This is my subtitle&#39;
+</pre></div>
+
+
+<p>Now, we have built our first Pelican blog. Many thanks to <a href="http://docs.getpelican.com/en/stable/#">Pelican</a>, the free static site generator, as well as to <a href="http://dandydev.net/about">Daan Debie</a>,
+author of bootstrap3. Let's now start writing in our blogs ! </p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="http://emmating.github.io/images/profile_picture.png"/>
+        </p>
+</div><!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
+
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://www.linkedin.com/in/yanting-cao-a34ba726/"><i class="fa fa-linkedin-square fa-lg"></i> linkedin</a></li>
+    <li class="list-group-item"><a href="https://github.com/emmating"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Categories -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4>
+  <ul class="list-group" id="categories">
+    <li class="list-group-item">
+      <a href="http://emmating.github.io/category/projects.html"><i class="fa fa-folder-open fa-lg"></i>Projects</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Categories -->
+
+<!-- Sidebar/Tag Cloud -->
+<li class="list-group-item">
+  <a href="http://emmating.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <ul class="list-group " id="tags">
+    <li class="list-group-item tag-1">
+      <a href="http://emmating.github.io/tag/python.html">Python</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/word-clouds.html">Word Clouds</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/geopy.html">Geopy</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/text-analysis.html">Text Analysis</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/geoencode.html">Geoencode</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/spatial-data-analysis.html">Spatial Data Analysis</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/pelican.html">Pelican</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="http://emmating.github.io/tag/googlev3.html">GoogleV3</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Tag Cloud -->
+
+<!-- Sidebar/Links -->
+<li class="list-group-item">
+  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+  <ul class="list-group" id="links">
+    <li class="list-group-item">
+      <a href="kaggle.com" target="_blank">Kaggle</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://rady.ucsd.edu/" target="_blank">Rady School of Management, UCSD</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://python.org/" target="_blank">Python.org</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://getpelican.com/" target="_blank">Pelican</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Links -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017 Yanting Cao
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="http://emmating.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="http://emmating.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="http://emmating.github.io/theme/js/respond.min.js"></script>
+
+    <script src="http://emmating.github.io/theme/js/bodypadding.js"></script>
+
+
+</body>
+</html>

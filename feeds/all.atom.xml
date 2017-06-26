@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Welcome to Yanting's Data Science Blog</title><link href="https://emmating.github.io/" rel="alternate"></link><link href="https://emmating.github.io/feeds/all.atom.xml" rel="self"></link><id>https://emmating.github.io/</id><updated>2017-06-23T16:45:00-07:00</updated><entry><title>Using Geopy for Spatial Data Analysis</title><link href="https://emmating.github.io/using-geopy-for-spatial-data-analysis.html" rel="alternate"></link><published>2017-06-23T16:45:00-07:00</published><updated>2017-06-23T16:45:00-07:00</updated><author><name>Yanting Cao</name></author><id>tag:emmating.github.io,2017-06-23:/using-geopy-for-spatial-data-analysis.html</id><summary type="html">&lt;p&gt;&lt;a href="https://geopy.readthedocs.io/en/1.10.0/"&gt;Geopy&lt;/a&gt; is a useful python package to deal with spatial data, such as locating the coordinates of addresses, cities, countries, 
+and landmarks or reverse. In the &lt;a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries"&gt;Two Sigma Connect Competition&lt;/a&gt; in &lt;a href="https://www.kaggle.com/"&gt;Kaggle&lt;/a&gt;, I found that some of the given latitude longitude
+do not match the addresses, so I use Geopy …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;a href="https://geopy.readthedocs.io/en/1.10.0/"&gt;Geopy&lt;/a&gt; is a useful python package to deal with spatial data, such as locating the coordinates of addresses, cities, countries, 
+and landmarks or reverse. In the &lt;a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries"&gt;Two Sigma Connect Competition&lt;/a&gt; in &lt;a href="https://www.kaggle.com/"&gt;Kaggle&lt;/a&gt;, I found that some of the given latitude longitude
+do not match the addresses, so I use Geopy to clean the mismatched latitude and longitude of rental&amp;nbsp;listings. &lt;/p&gt;
+&lt;h3&gt;Import Packages and Read&amp;nbsp;Data&lt;/h3&gt;
+&lt;p&gt;I am working with rental listings in New York City, the addresses should be in &lt;span class="caps"&gt;NYC&lt;/span&gt;, so I append &amp;#8216;New York City&amp;#8217; to the addresses
+ensure its&amp;nbsp;accuracy. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;geopy.geocoders&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;GoogleV3&lt;/span&gt;
+&lt;span class="n"&gt;bad_location&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;street_address&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bad_location&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;street_address&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;,New York City&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Geoencoding&lt;/h3&gt;
+&lt;p&gt;There are several geolocation services we can use, such as Google Maps, Bing Maps, or Yahoo Boss. I choose to use Google Maps 
+Geoencoding &lt;span class="caps"&gt;API&lt;/span&gt; (GoogleV3) because it is insensitive to missing information. Using a standard GoogleV3 &lt;span class="caps"&gt;API&lt;/span&gt;, we can have 2,500
+free requests per day and 50 requests per second. Before using it, we need to register to get a free &lt;span class="caps"&gt;API&lt;/span&gt; key following &lt;a href="https://developers.google.com/maps/documentation/geocoding/get-api-key"&gt;this&lt;/a&gt;&amp;nbsp;link.   &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def do_geocode(address):
+    geolocator = GoogleV3(api_key = &amp;#39;your_api_key&amp;#39;)
+    try:
+        location = address.apply(geolocator.geocode)
+        latitude = location.apply(lambda x: x.latitude)
+        longitude = location.apply(lambda x: x.longitude)
+        return (latitude, longitude)
+    except GeocoderTimedOut:
+        return do_geocode()
+
+(latitude, longitude) = do_geocode(bad_location[&amp;#39;street_address&amp;#39;])
+bad_location.loc[:,&amp;#39;latitude&amp;#39;] = latitude
+bad_location.loc[:,&amp;#39;longitude&amp;#39;] = longitude
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Quite simple, within a few minutes, we can generate the geolocation for the&amp;nbsp;addresses. &lt;/p&gt;</content><category term="Python"></category><category term="Geopy"></category><category term="Spatial Data Analysis"></category><category term="GoogleV3"></category><category term="Geoencode"></category></entry><entry><title>Creating Word Cloud in Python</title><link href="https://emmating.github.io/creating-word-cloud-in-python.html" rel="alternate"></link><published>2017-06-22T11:45:00-07:00</published><updated>2017-06-22T11:45:00-07:00</updated><author><name>Yanting Cao</name></author><id>tag:emmating.github.io,2017-06-22:/creating-word-cloud-in-python.html</id><summary type="html">&lt;p&gt;In text analysis, creating word clouds is a useful technique to visualize text data. Words bigger and bolder in size represent 
+a higher frequency of occurance in word corpus. In other word, key words stand out and catch our eyes. The color of the text are 
+generated&amp;nbsp;randomly. &lt;/p&gt;
+&lt;p&gt;It is …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In text analysis, creating word clouds is a useful technique to visualize text data. Words bigger and bolder in size represent 
+a higher frequency of occurance in word corpus. In other word, key words stand out and catch our eyes. The color of the text are 
+generated&amp;nbsp;randomly. &lt;/p&gt;
+&lt;p&gt;It is very easy to create word cloud in Python using wordcloud package. I will use word cloud to visualize features and display address 
+of rental listings from the &lt;a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries"&gt;Two Sigma Connect Competition&lt;/a&gt; in the recent Kaggle&amp;nbsp;Competition. &lt;/p&gt;
+&lt;h3&gt;Import Packages and Read&amp;nbsp;Data&lt;/h3&gt;
+&lt;p&gt;Let&amp;#8217;s get started by importing the following packages and read the&amp;nbsp;data&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;wordcloud&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;WordCloud&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="n"&gt;train&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;../Data/train.json&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Preprocess text&amp;nbsp;data&lt;/h3&gt;
+&lt;p&gt;Next, extract text data from &amp;#8216;feature&amp;#8217; and &amp;#8216;display_address&amp;#8217; columns in the&amp;nbsp;dataframe&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;text = &amp;#39;&amp;#39;
+text_dispadd = &amp;#39;&amp;#39;
+for ind, row in train.iterrows():
+    for feature in row[&amp;#39;features&amp;#39;]:
+        text = &amp;quot; &amp;quot;.join([text, &amp;quot;_&amp;quot;.join(feature.strip().split(&amp;quot; &amp;quot;))])
+    text_dispadd = &amp;quot; &amp;quot;.join([text_dispadd,&amp;quot;_&amp;quot;.join(row[&amp;#39;display_address&amp;#39;].strip().split(&amp;quot; &amp;quot;))])
+text = text.strip()
+text_dispadd = text_dispadd.strip()
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Create word&amp;nbsp;clouds&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;plt.figure(figsize=(12,6))
+wc = WordCloud(background_color=&amp;#39;white&amp;#39;, 
+            width=600, 
+            height=300,
+            max_font_size=50, 
+            max_words=40).generate(text)
+plt.imshow(wc)
+plt.title(&amp;quot;Features&amp;quot;, fontsize=20)
+plt.axis(&amp;quot;off&amp;quot;)
+plt.show()
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Thus we created the word cloud for rental listing features.
+We get a general sense of words used to describe features of rental listings in our training set.
+&lt;img alt="alt text" src="images/feature_word_cloud.png"&gt;&lt;/p&gt;
+&lt;p&gt;We can change the background color of word cloud by setting &lt;code&gt;background_color = 'black'&lt;/code&gt; for display_address column. 
+There are some addresses that appear more frequent in our training set. 
+&lt;img alt="alt text" src="images/display_address_word_cloud.png"&gt;&lt;/p&gt;</content><category term="Python"></category><category term="Word Clouds"></category><category term="Text Analysis"></category></entry><entry><title>How I Build My First Pelican Blog</title><link href="https://emmating.github.io/how-i-build-my-first-pelican-blog.html" rel="alternate"></link><published>2017-06-14T16:45:00-07:00</published><updated>2017-06-14T16:45:00-07:00</updated><author><name>Yanting Cao</name></author><id>tag:emmating.github.io,2017-06-14:/how-i-build-my-first-pelican-blog.html</id><summary type="html">&lt;p&gt;After completed several data science projects, I am eager to document them and share them with people. 
+It took me several days to research, set up and write my blog, but I feel it can be much easier and faster 
+to build a Pelican blog, so I am sharing with …&lt;/p&gt;</summary><content type="html">&lt;p&gt;After completed several data science projects, I am eager to document them and share them with people. 
+It took me several days to research, set up and write my blog, but I feel it can be much easier and faster 
+to build a Pelican blog, so I am sharing with you the lessons I have learned in building my first data science&amp;nbsp;blog.  &lt;/p&gt;
+&lt;h2&gt;Table of&amp;nbsp;Contents&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="### Find a Static Site Generator"&gt;Find a Static Site&amp;nbsp;Generator&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="### Basic Setup"&gt;Basic Setup&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#### Install and Activate Virtual Environment"&gt;Install and Activate Virtual&amp;nbsp;Environment&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#### Install Pelican under Virtual Environment"&gt;Install Pelican under Virtual&amp;nbsp;Environment&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#### Quickstart Your Site"&gt;Quickstart Your&amp;nbsp;Site&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="### Install Pelican Theme"&gt;Install Pelican&amp;nbsp;Theme&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="### Write Content"&gt;Write&amp;nbsp;Content&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="### Publish Your Site"&gt;Publish Your&amp;nbsp;Site&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="### More Setup"&gt;More Setups&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="#### Side Bar"&gt;Side&amp;nbsp;Bar&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="#### Banner"&gt;Banner&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3&gt;Find a Static Site&amp;nbsp;Generator&lt;/h3&gt;
+&lt;p&gt;There are lots of discussions on the Internet about pros and cons between static site and dynamic site &lt;a href="http://www.codeconquest.com/website/static-vs-dynamic-websites/"&gt;static_vs_dynamic&lt;/a&gt;. For me, 
+I am build a small size personal website, static site will fully meet my needs, and it is faster to load, and it allows 
+me to write blog posts in simple format, such as markdown file. So if you are write a small/medium personal site, go with 
+static! There are several static site generators to choose from, such as jekyll, nikola, etc. Recently, Pelicanis has gain lots of 
+popularity among the data science community, and I saw many people are moving their blogs to Pelican, so I choose to use Pelican, 
+it has lots of online resources and user community support, and it is built in my favorite Python&amp;nbsp;language. &lt;/p&gt;
+&lt;h3&gt;Basic&amp;nbsp;Setup&lt;/h3&gt;
+&lt;p&gt;Read official &lt;a href="http://docs.getpelican.com/en/stable/"&gt;Pelican documentation&lt;/a&gt; first, most of the questions can be found&amp;nbsp;there. &lt;/p&gt;
+&lt;h4&gt;Install and Activate Virtual&amp;nbsp;Environment&lt;/h4&gt;
+&lt;p&gt;A virtual environment is an isolated Python environment in which we store our Pelican blog site. We build an isolated environment 
+so that if we make changes or update a Python package or Python version outside the virtual environment, it does not affect the Python
+used in our Pelican site. 
+Steps are as follows: 
+- open your Linux terminal(I use git bash), install virtualenv, and activate virtualenv, after activation, you will see your Linux command
+start&amp;nbsp;with(pelican)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install virtualenv
+virtualenv ~/virtualenvs/pelican
+cd ~/virtualenvs
+source ~/virtualenvs/pelican/Scripts/activate
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Install Pelican Under Virtual&amp;nbsp;Environment&lt;/h4&gt;
+&lt;p&gt;Next, we install Pelican under virtualenv, make sure (pelican) is shown at the beginning of your Linux command.
+The last four commands are optional, use them if you want to install Markdown, typogrify, update pelican, or read help&amp;nbsp;file.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pip install pelican
+pip install Markdown
+pip install typogrify
+pip install –upgrade pelican
+pelican –help
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Quickstart Your&amp;nbsp;Site&lt;/h4&gt;
+&lt;p&gt;Quickstart your site, select your choices. 
+After the following command, you will see the output of your project location, &lt;strong&gt;write down the location&lt;/strong&gt;, you will use it&amp;nbsp;later. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pelican-quickstart
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Install Pelican&amp;nbsp;Theme&lt;/h3&gt;
+&lt;p&gt;Pelican comes with its default theme, but you can change your themes really easy from &lt;a href="https://github.com/getpelican/pelican-themes"&gt;Pelican-themes github repo&lt;/a&gt;. Before selecting the
+theme you want to install, take a look at the preview of various &lt;a href="http://www.pelicanthemes.com/"&gt;Pelican themes&lt;/a&gt;. I use the very popular &lt;a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3"&gt;bootstrap3 theme&lt;/a&gt;, which comes with many 
+functions. I choose bootstrap3 theme particularly because it support IPython Notebook, it includes many more themes based on bootstrap3 which
+you can choose from &lt;a href="http://bootswatch.com/"&gt;bootswatch&lt;/a&gt;. Moreover, you can include a profile picture and a simple description of&amp;nbsp;yourself.&lt;/p&gt;
+&lt;p&gt;First, download or clone from the github repo containing the theme you want to use, next, install it to your Pelican blog by the following commmand
+The last two commands are optional which list themes installed.  &lt;strong&gt;write down the location where it is stored&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pelican-themes --install ~/virtualenvs/pelican-themes/boostrap3 --verbose
+pelican-themes –l # list themes installed
+pelican-themes –v –l # list themes installed with path
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;For a boostrap3 theme to work, you also need to install pelican-plugins from &lt;a href="https://github.com/getpelican/pelican-plugins/tree/master/tag_cloud"&gt;this&lt;/a&gt; github repo. Clone or copy the pelican-plugin folder, 
+add the following lines to pelicanconf.py located in ~/virtualenv/pelican&amp;nbsp;folder. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;THEME = &amp;#39;path/to/bootstrap3/stored/pelican-bootstrap3&amp;#39;
+JINJA_ENVIRONMENT = {&amp;#39;extensions&amp;#39;: [&amp;#39;jinja2.ext.i18n&amp;#39;]}
+PLUGIN_PATHS = [&amp;#39;/path/to/git/pelican-plugins&amp;#39;]
+PLUGINS = [&amp;#39;i18n_subsites&amp;#39;]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To select a theme from &lt;a href="http://bootswatch.com/"&gt;bootswatch&lt;/a&gt;: http://bootswatch.com/, all you need to do is add the following line to your pelicanconf.py
+    BOOTSTRAP_THEME =&amp;nbsp;&amp;#8216;bootswatch_theme&amp;#8217;&lt;/p&gt;
+&lt;h3&gt;Write&amp;nbsp;Content&lt;/h3&gt;
+&lt;p&gt;Create three folders in your content folder, name them images, pages and posts, respectively. images folder stores all the images you want to use in your blog.
+Next, create a markdown file (about.md) and store in pages folder, where about_me is stored. In the end, create several markdown files in posts folder where each file contains 
+the content of a&amp;nbsp;post. &lt;/p&gt;
+&lt;p&gt;Include the following metadata in each of your markdown&amp;nbsp;files.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Title: How I Build My First Pelican&amp;nbsp;Blog&lt;/p&gt;
+&lt;p&gt;Date: 2017-06-14&amp;nbsp;16:00&lt;/p&gt;
+&lt;p&gt;Modified: 2017-06-15&amp;nbsp;16:00 &lt;/p&gt;
+&lt;p&gt;Category:&amp;nbsp;Tutorials&lt;/p&gt;
+&lt;p&gt;Tags: Python,&amp;nbsp;Pelican&lt;/p&gt;
+&lt;p&gt;Slug:&amp;nbsp;my-super-post  &lt;/p&gt;
+&lt;p&gt;Authors: Yanting&amp;nbsp;Cao&lt;/p&gt;
+&lt;p&gt;Summary: A tutorial of my first pelican&amp;nbsp;blog&lt;/p&gt;
+&lt;p&gt;Write my content here&amp;nbsp;&amp;#8230;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;If you are not familar with markdown syntax, here is a &lt;a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet"&gt;link to a Markdown cheatsheet&lt;/a&gt;. &lt;/p&gt;
+&lt;h3&gt;Publish Your&amp;nbsp;Site&lt;/h3&gt;
+&lt;p&gt;We have gone this far, let&amp;#8217;s now take a look at our&amp;nbsp;blog.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;pelican ~/virtualenvs/pelican/content/ -s ~/virtualenvs/pelican/pelicanconf.py
+cd output
+python –m http.server
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Once the basic server has been started, you can view your site at&amp;nbsp;http://localhost:8000/&lt;/p&gt;
+&lt;h3&gt;More&amp;nbsp;setups&lt;/h3&gt;
+&lt;p&gt;If you want to make your blog look better, I will teach you more setups, including side bar and banner (this specifically applies to bootstrap3 theme,
+if you use a different theme, refer to the descriptions in the theme&amp;#8217;s github&amp;nbsp;repo)&lt;/p&gt;
+&lt;h4&gt;Side&amp;nbsp;Bar&lt;/h4&gt;
+&lt;p&gt;Side bar has options including display an image, Social(github, linkedin, twitter, facebook, etc.), Categories, Tags and&amp;nbsp;Links.&lt;/p&gt;
+&lt;p&gt;Display an image on the side bar
+Save image in png file under &amp;#8216;content/images&amp;#8217;, add the following lines in your&amp;nbsp;pelicanconf.py&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;PATH = &amp;#39;content&amp;#39;
+STATIC_PATHS = [&amp;#39;images&amp;#39;]
+AVATAR = &amp;#39;images/side_bar_pic.png&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Show Social Links
+Include the following lines in your&amp;nbsp;pelicanconf.py&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;SOCIAL = ((&amp;#39;twitter&amp;#39;, &amp;#39;http://twitter.com/youraccount&amp;#39;, &amp;#39;twitter&amp;#39;),
+      (&amp;#39;linkedin&amp;#39;, &amp;#39;http://www.linkedin.com/in/youraccount&amp;#39;, &amp;#39;linkedin&amp;#39;),
+      (&amp;#39;github&amp;#39;, &amp;#39;http://github.com/youraccount&amp;#39;, &amp;#39;github&amp;#39;),
+      (&amp;#39;stackoverflow&amp;#39;, &amp;#39;http://stackoverflow.com/users/youraccount&amp;#39;, &amp;#39;stack-overflow&amp;#39;)
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Show Tags
+Also in your pelicanconf.py, add the following&amp;nbsp;codeconquest&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;DISPLAY_TAGS_ON_SIDEBAR = True
+PLUGINS = [&amp;#39;tag_cloud&amp;#39;]
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Show Categories
+Add the following line to&amp;nbsp;pelicanconf.py&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;DISPLAY_CATEGORIES_ON_SIDEBAR = True
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Show Links
+Add the following line to&amp;nbsp;pelicanconf.py    &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;LINKS = ((&amp;#39;Kaggle&amp;#39;,&amp;#39;kaggle.com&amp;#39;),
+     (&amp;#39;Rady School of Management, UCSD&amp;#39;, &amp;#39;http://rady.ucsd.edu/&amp;#39;),
+     (&amp;#39;Python.org&amp;#39;, &amp;#39;http://python.org/&amp;#39;),
+     (&amp;#39;Pelican&amp;#39;, &amp;#39;http://getpelican.com/&amp;#39;))
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Banner&lt;/h4&gt;
+&lt;p&gt;Adding a banner image and subtitle to your blog by the following&amp;nbsp;code&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;BANNER = &amp;#39;/path/to/banner.png&amp;#39;
+BANNER_SUBTITLE = &amp;#39;This is my subtitle&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now, we have built our first Pelican blog. Many thanks to &lt;a href="http://docs.getpelican.com/en/stable/#"&gt;Pelican&lt;/a&gt;, the free static site generator, as well as to &lt;a href="http://dandydev.net/about"&gt;Daan Debie&lt;/a&gt;,
+author of bootstrap3. Let&amp;#8217;s now start writing in our blogs&amp;nbsp;! &lt;/p&gt;</content><category term="Python"></category><category term="Pelican"></category></entry></feed>
