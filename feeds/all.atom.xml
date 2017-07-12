@@ -247,5 +247,5 @@ BANNER_SUBTITLE = &amp;#39;This is my subtitle&amp;#39;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Now, we have built our first Pelican blog. Many thanks to &lt;a href="http://docs.getpelican.com/en/stable/#"&gt;Pelican&lt;/a&gt;, the free static site generator, as well as to &lt;a href="http://dandydev.net/about"&gt;Daan Debie&lt;/a&gt;,
+&lt;p&gt;Now, we have built our first Pelican blog, &lt;a href="https://github.com/emmating/emmating.github.io"&gt;here&lt;/a&gt; is the code on my github. Many thanks to &lt;a href="http://docs.getpelican.com/en/stable/#"&gt;Pelican&lt;/a&gt;, the free static site generator, as well as to &lt;a href="http://dandydev.net/about"&gt;Daan Debie&lt;/a&gt;,
 author of bootstrap3. Let's now start writing in our blogs ! &lt;/p&gt;</content><category term="Python"></category><category term="Pelican"></category></entry></feed>

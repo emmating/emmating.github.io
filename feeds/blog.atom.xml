@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Welcome to Yanting's Data Science Blog - Blog</title><link href="https://emmating.github.io/" rel="alternate"></link><link href="https://emmating.github.io/feeds/blog.atom.xml" rel="self"></link><id>https://emmating.github.io/</id><updated>2017-06-23T16:45:00-07:00</updated><entry><title>Using Geopy for Spatial Data Analysis</title><link href="https://emmating.github.io/using-geopy-for-spatial-data-analysis.html" rel="alternate"></link><published>2017-06-23T16:45:00-07:00</published><updated>2017-06-23T16:45:00-07:00</updated><author><name>Yanting Cao</name></author><id>tag:emmating.github.io,2017-06-23:/using-geopy-for-spatial-data-analysis.html</id><summary type="html">&lt;p&gt;&lt;a href="https://geopy.readthedocs.io/en/1.10.0/"&gt;Geopy&lt;/a&gt; is a useful python package to deal with spatial data, such as locating the coordinates of addresses, cities, countries, 
+and landmarks or reverse. In the &lt;a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries"&gt;Two Sigma Connect Competition&lt;/a&gt; in &lt;a href="https://www.kaggle.com/"&gt;Kaggle&lt;/a&gt;, I found that some of the given latitude longitude
+do not match the addresses, so I use Geopy …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;a href="https://geopy.readthedocs.io/en/1.10.0/"&gt;Geopy&lt;/a&gt; is a useful python package to deal with spatial data, such as locating the coordinates of addresses, cities, countries, 
+and landmarks or reverse. In the &lt;a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries"&gt;Two Sigma Connect Competition&lt;/a&gt; in &lt;a href="https://www.kaggle.com/"&gt;Kaggle&lt;/a&gt;, I found that some of the given latitude longitude
+do not match the addresses, so I use Geopy to clean the mismatched latitude and longitude of rental listings. &lt;/p&gt;
+&lt;h3&gt;Import Packages and Read Data&lt;/h3&gt;
+&lt;p&gt;I am working with rental listings in New York City, the addresses should be in NYC, so I append 'New York City' to the addresses
+ensure its accuracy. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;geopy.geocoders&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;GoogleV3&lt;/span&gt;
+&lt;span class="n"&gt;bad_location&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;street_address&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bad_location&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;street_address&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;,New York City&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Geoencoding&lt;/h3&gt;
+&lt;p&gt;There are several geolocation services we can use, such as Google Maps, Bing Maps, or Yahoo Boss. I choose to use Google Maps 
+Geoencoding API (GoogleV3) because it is insensitive to missing information. Using a standard GoogleV3 API, we can have 2,500
+free requests per day and 50 requests per second. Before using it, we need to register to get a free API key following &lt;a href="https://developers.google.com/maps/documentation/geocoding/get-api-key"&gt;this&lt;/a&gt;
+link.   &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;def do_geocode(address):
+    geolocator = GoogleV3(api_key = &amp;#39;your_api_key&amp;#39;)
+    try:
+        location = address.apply(geolocator.geocode)
+        latitude = location.apply(lambda x: x.latitude)
+        longitude = location.apply(lambda x: x.longitude)
+        return (latitude, longitude)
+    except GeocoderTimedOut:
+        return do_geocode()
+
+(latitude, longitude) = do_geocode(bad_location[&amp;#39;street_address&amp;#39;])
+bad_location.loc[:,&amp;#39;latitude&amp;#39;] = latitude
+bad_location.loc[:,&amp;#39;longitude&amp;#39;] = longitude
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Quite simple, within a few minutes, we can generate the geolocation for the addresses. &lt;/p&gt;</content><category term="Python"></category><category term="Geopy"></category><category term="Spatial Data Analysis"></category><category term="GoogleV3"></category><category term="Geoencode"></category></entry><entry><title>Creating Word Cloud in Python</title><link href="https://emmating.github.io/creating-word-cloud-in-python.html" rel="alternate"></link><published>2017-06-22T11:45:00-07:00</published><updated>2017-06-22T11:45:00-07:00</updated><author><name>Yanting Cao</name></author><id>tag:emmating.github.io,2017-06-22:/creating-word-cloud-in-python.html</id><summary type="html">&lt;p&gt;In text analysis, creating word clouds is a useful technique to visualize text data. Words bigger and bolder in size represent 
+a higher frequency of occurance in word corpus. In other word, key words stand out and catch our eyes. The color of the text are 
+generated randomly. &lt;/p&gt;
+&lt;p&gt;It is …&lt;/p&gt;</summary><content type="html">&lt;p&gt;In text analysis, creating word clouds is a useful technique to visualize text data. Words bigger and bolder in size represent 
+a higher frequency of occurance in word corpus. In other word, key words stand out and catch our eyes. The color of the text are 
+generated randomly. &lt;/p&gt;
+&lt;p&gt;It is very easy to create word cloud in Python using wordcloud package. I will use word cloud to visualize features and display address 
+of rental listings from the &lt;a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries"&gt;Two Sigma Connect Competition&lt;/a&gt; in the recent Kaggle Competition. &lt;/p&gt;
+&lt;h3&gt;Import Packages and Read Data&lt;/h3&gt;
+&lt;p&gt;Let's get started by importing the following packages and read the data&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;wordcloud&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;WordCloud&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;span class="n"&gt;train&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read_json&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;../Data/train.json&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Preprocess text data&lt;/h3&gt;
+&lt;p&gt;Next, extract text data from 'feature' and 'display_address' columns in the dataframe&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;text = &amp;#39;&amp;#39;
+text_dispadd = &amp;#39;&amp;#39;
+for ind, row in train.iterrows():
+    for feature in row[&amp;#39;features&amp;#39;]:
+        text = &amp;quot; &amp;quot;.join([text, &amp;quot;_&amp;quot;.join(feature.strip().split(&amp;quot; &amp;quot;))])
+    text_dispadd = &amp;quot; &amp;quot;.join([text_dispadd,&amp;quot;_&amp;quot;.join(row[&amp;#39;display_address&amp;#39;].strip().split(&amp;quot; &amp;quot;))])
+text = text.strip()
+text_dispadd = text_dispadd.strip()
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h3&gt;Create word clouds&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;plt.figure(figsize=(12,6))
+wc = WordCloud(background_color=&amp;#39;white&amp;#39;, 
+            width=600, 
+            height=300,
+            max_font_size=50, 
+            max_words=40).generate(text)
+plt.imshow(wc)
+plt.title(&amp;quot;Features&amp;quot;, fontsize=20)
+plt.axis(&amp;quot;off&amp;quot;)
+plt.show()
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Thus we created the word cloud for rental listing features.
+We get a general sense of words used to describe features of rental listings in our training set.
+&lt;img alt="alt text" src="images/feature_word_cloud.png"&gt;&lt;/p&gt;
+&lt;p&gt;We can change the background color of word cloud by setting &lt;code&gt;background_color = 'black'&lt;/code&gt; for display_address column. 
+There are some addresses that appear more frequent in our training set. 
+&lt;img alt="alt text" src="images/display_address_word_cloud.png"&gt;&lt;/p&gt;</content><category term="Python"></category><category term="Word Clouds"></category><category term="Text Analysis"></category></entry></feed>
