@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="english" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
+<head>
+    <title>Identifying Duplicate Quora Question Pairs (Kaggle Competition) - Welcome to Yanting's Data Science Blog</title>
+    <!-- Using the latest rendering mode for IE -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+
+<link rel="canonical" href="https://emmating.github.io/identifying-duplicate-quora-question-pairs-kaggle-competition.html">
+
+        <meta name="author" content="Yanting Cao" />
+        <meta name="keywords" content="NLP,Neural Networks,LSTMs,tfidf,Word2vec,Gradient Boosting,Random Forest,Stacking,Kaggle,Python" />
+        <meta name="description" content="We explored the current methods in NLP, including word2vec embedding (gensim package in python), LSTMs(use keras neural networks API), tf-idf, python nltk package, etc. We built machine learning models which identified duplicate Quora question pairs with high accuracy (logloss ~0.151) We are ranked top 8% in this Kaggle …" />
+
+        <meta property="og:site_name" content="Welcome to Yanting's Data Science Blog" />
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="Identifying Duplicate Quora Question Pairs (Kaggle Competition)"/>
+        <meta property="og:url" content="https://emmating.github.io/identifying-duplicate-quora-question-pairs-kaggle-competition.html"/>
+        <meta property="og:description" content="We explored the current methods in NLP, including word2vec embedding (gensim package in python), LSTMs(use keras neural networks API), tf-idf, python nltk package, etc. We built machine learning models which identified duplicate Quora question pairs with high accuracy (logloss ~0.151) We are ranked top 8% in this Kaggle …"/>
+        <meta property="article:published_time" content="2017-07-12" />
+            <meta property="article:section" content="Projects" />
+            <meta property="article:tag" content="NLP" />
+            <meta property="article:tag" content="Neural Networks" />
+            <meta property="article:tag" content="LSTMs" />
+            <meta property="article:tag" content="tfidf" />
+            <meta property="article:tag" content="Word2vec" />
+            <meta property="article:tag" content="Gradient Boosting" />
+            <meta property="article:tag" content="Random Forest" />
+            <meta property="article:tag" content="Stacking" />
+            <meta property="article:tag" content="Kaggle" />
+            <meta property="article:tag" content="Python" />
+            <meta property="article:author" content="Yanting Cao" />
+
+
+    <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://emmating.github.io/theme/css/bootstrap.cerulean.min.css" type="text/css"/>
+    <link href="https://emmating.github.io/theme/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://emmating.github.io/theme/css/pygments/native.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://emmating.github.io/theme/css/style.css" type="text/css"/>
+
+        <link href="https://emmating.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Welcome to Yanting's Data Science Blog ATOM Feed"/>
+
+
+
+        <link href="https://emmating.github.io/feeds/projects.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Welcome to Yanting's Data Science Blog Projects ATOM Feed"/>
+
+</head>
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="https://emmating.github.io/" class="navbar-brand">
+Welcome to Yanting's Data Science Blog            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                         <li><a href="https://emmating.github.io/pages/about-me.html">
+                             About Me
+                          </a></li>
+                        <li >
+                            <a href="https://emmating.github.io/category/blog.html">Blog</a>
+                        </li>
+                        <li class="active">
+                            <a href="https://emmating.github.io/category/projects.html">Projects</a>
+                        </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+</div> <!-- /.navbar -->
+<!-- Banner -->
+<!-- End Banner -->
+<div class="container">
+    <div class="row">
+        <div class="col-sm-9">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://emmating.github.io/identifying-duplicate-quora-question-pairs-kaggle-competition.html"
+                       rel="bookmark"
+                       title="Permalink to Identifying Duplicate Quora Question Pairs (Kaggle Competition)">
+                        Identifying Duplicate Quora Question Pairs (Kaggle Competition)
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
+<footer class="post-info">
+    <span class="label label-default">Date</span>
+    <span class="published">
+        <i class="fa fa-calendar"></i><time datetime="2017-07-12T16:45:00-07:00"> Wed 12 July 2017</time>
+    </span>
+
+
+
+
+
+<span class="label label-default">Tags</span>
+	<a href="https://emmating.github.io/tag/nlp.html">NLP</a>
+        /
+	<a href="https://emmating.github.io/tag/neural-networks.html">Neural Networks</a>
+        /
+	<a href="https://emmating.github.io/tag/lstms.html">LSTMs</a>
+        /
+	<a href="https://emmating.github.io/tag/tfidf.html">tfidf</a>
+        /
+	<a href="https://emmating.github.io/tag/word2vec.html">Word2vec</a>
+        /
+	<a href="https://emmating.github.io/tag/gradient-boosting.html">Gradient Boosting</a>
+        /
+	<a href="https://emmating.github.io/tag/random-forest.html">Random Forest</a>
+        /
+	<a href="https://emmating.github.io/tag/stacking.html">Stacking</a>
+        /
+	<a href="https://emmating.github.io/tag/kaggle.html">Kaggle</a>
+        /
+	<a href="https://emmating.github.io/tag/python.html">Python</a>
+    
+</footer><!-- /.post-info -->                    </div>
+                </div>
+                <ul>
+<li>We explored the current methods in NLP, including word2vec embedding (gensim package in python), LSTMs(use keras neural networks API), tf-idf, python nltk package, etc. </li>
+<li>We built machine learning models which identified duplicate Quora question pairs with high accuracy (logloss ~0.151)</li>
+<li>We are ranked top 8% in this Kaggle competition among 3307 teams who participated, and got a Bronze Medal.</li>
+</ul>
+<h2>Table of Contents</h2>
+<ol>
+<li><a href="## Problem to Solve">Problem to Solve</a></li>
+<li>[Methods Overview] (## Methods Overview)</li>
+<li><a href="## EDA of Quora Dataset">EDA of Quora Dataset</a></li>
+<li><a href="## Feature Engineering">Feature Engineering</a><ul>
+<li><a href="### Basic Features">Basic Features</a></li>
+<li><a href="### NLTK Features">NLTK Features</a></li>
+<li><a href="### Word2vec features">Word2vec features</a></li>
+<li><a href="### TF-IDF features">TF-IDF features</a></li>
+<li><a href="### LSTMs features">LSTMs features</a></li>
+</ul>
+</li>
+<li><a href="## Machine Learning Models">Machine Learning Models</a></li>
+<li><a href="## Model Ensemble">Model Ensemble</a></li>
+</ol>
+<h2>Problem to Solve - Identifying Duplicate Questions</h2>
+<p>Quora is a question-and-answer online platform where questions are asked, answered, edited and organized 
+by its community of users. Very often, people ask differently worded questions but with the same meaning. Multiple questions
+with the same intent cause the seekers more time to find the best answers to their questions, and also cause the writers feel
+they need to answer multiple versions of the same question. <strong>Identifying duplicate questions</strong> will provide better experience
+for both the users and writers. </p>
+<p>For example, the following question pairs are duplicates:</p>
+<ul>
+<li>
+<p>question 1: How do I read and find my YouTube comments? vs question 2: How can I see all my Youtube comments?</p>
+</li>
+<li>
+<p>question 3: What are some examples of products that can be make from crude oil? vs question 4: What are some of the products made from crude oil?</p>
+</li>
+</ul>
+<p>The following question pairs are not duplicates:</p>
+<ul>
+<li>
+<p>question 5: What is the step by step guide to invest in share market? vs question 6: What is the step by step guide to invest in share market in india?</p>
+</li>
+<li>
+<p>question 7: What's causing someone to be jealous? vs question 8: What can I do to avoid being jealous of someone?</p>
+</li>
+</ul>
+<h2>Methods Overview:</h2>
+<p>To identify duplicate questions, we extracted features from text data including basic NLP, word2vec embedding, TF-IDF, LSTMs. 
+We trained the features with Random Forest model, xgboost model, logistic regression and neural networks. 
+Finally, we ensembled 12 models to make the final model more robust and to improve accuracy. </p>
+<h2>EDA of Quora Dataset</h2>
+<p>The <a href="https://www.kaggle.com/c/quora-question-pairs/data">Quora dataset</a> provided by Kaggle contains a train dataset and a test dataset. The train dataset consists 404290 question
+pairs with each pairs labeled as 1(duplicate) or 0 (not duplicate). The test dataset consists 2345796 question pairs without 
+labels, which is 5.8 fold as much as the train dataset. Evaluations are based on logloss between the predicted value and ground
+truth. </p>
+<p>Let's take a look at the dataset. </p>
+<p>Data fields: id - id of the question pairs; qid1 - id of question 1; qid2 - id of question 2; question1 - full text of question 1;
+question2 - full text of question 2</p>
+<p><img alt="alt text" src="images/train_head.png"></p>
+<p>Data distribution by label</p>
+<p><img alt="alt text" src="images/data_distribution_by_target_variable.png"></p>
+<p>We did Exploratory Data Analysis (EDA) and found the following features between train and test dataset. The values in train 
+and test dataset are very close.  </p>
+<p>number of words:
+- Median in train: 10.0 test: 10.0
+- Average in train: 11.06 test: 11.02
+- Maximum in train: 237 test: 238
+- Minimum in train: 1 test: 1</p>
+<p>number of characters:
+- Median in train: 51.0 test: 53.0
+- Average in train: 59.82 test: 60.07
+- Maximum in train: 1169 test: 1176
+- Minimum in train: 1 test: 1</p>
+<p>We found that the number of common words between question pairs may be a good feature in building our prediction model. </p>
+<p><img alt="alt text" src="images/common_unigram_counts.png"></p>
+<h2>Feature Engineering</h2>
+<p>Feature engineering is a major part in building good machine learning models. We applied various methods to
+extract features from text data. We used the following feature engineering methods, including basic features, NLP
+features, word2vec features, TF-IDF transformation features, LSTM features as well as leaky features. I will cover
+each methods as follows. </p>
+<h3>Basic Features</h3>
+<p>We crafted the following 18 basic features:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>len_q</td>
+<td>length of characters in question inclduing whitespaces</td>
+</tr>
+<tr>
+<td>len_char_q</td>
+<td>number of characters in question without whitespaces</td>
+</tr>
+<tr>
+<td>diff_len</td>
+<td>difference in character length between question pairs</td>
+</tr>
+<tr>
+<td>char_diff_unq_stop</td>
+<td>difference in number of characters between question pairs after filtering stop words</td>
+</tr>
+<tr>
+<td>char_ratio</td>
+<td>ratio of character length between question pairs</td>
+</tr>
+<tr>
+<td>len_word_q</td>
+<td>number of words in question</td>
+</tr>
+<tr>
+<td>wc_diff</td>
+<td>difference in number of words between question pairs</td>
+</tr>
+<tr>
+<td>wc_diff_unique</td>
+<td>difference in number of unique words between question paris</td>
+</tr>
+<tr>
+<td>wc_diff_unq_stop</td>
+<td>difference in number of unique words between question pairs after filtering stop words</td>
+</tr>
+<tr>
+<td>wc_ratio</td>
+<td>ratio of word length between question pairs</td>
+</tr>
+<tr>
+<td>wc_unique_ratio</td>
+<td>ratio of unique word length between question pairs</td>
+</tr>
+<tr>
+<td>wc_ratio_unique_stop</td>
+<td>ratio of unique word length between q1 and q2 after filtering stop words</td>
+</tr>
+<tr>
+<td>total_unique_words</td>
+<td>number of unique words in each question pair</td>
+</tr>
+<tr>
+<td>total_unique_words_w_stop</td>
+<td>number of unique words in each question pair after filtering stop words</td>
+</tr>
+<tr>
+<td>common_words</td>
+<td>number of common words in each question pair</td>
+</tr>
+<tr>
+<td>word_match</td>
+<td>number of common words in question pairs over total number of words in question pairs after filtering stop words</td>
+</tr>
+<tr>
+<td>2_SWC</td>
+<td>word match using 2-grams</td>
+</tr>
+<tr>
+<td>3_SWC</td>
+<td>word match using 3-grams</td>
+</tr>
+<tr>
+<td>1_SWC_w_stops</td>
+<td>word match after filtering stop words</td>
+</tr>
+<tr>
+<td>2_SWC_w_stops</td>
+<td>word match using 2-grams after filtering stop words</td>
+</tr>
+<tr>
+<td>3_SWC_w_stops</td>
+<td>word match using 3-grams after filtering stop words</td>
+</tr>
+<tr>
+<td>Jaccard</td>
+<td>the shared words count over total words count in each question pair</td>
+</tr>
+<tr>
+<td>same_start</td>
+<td>return 1 if a question pair has same start word, otherwise return 0</td>
+</tr>
+</tbody>
+</table>
+<h3>NLTK Features</h3>
+<p>We used nltk package in Python, and crafted the following features. </p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WC_NN</td>
+<td>number of common nouns in each question pair</td>
+</tr>
+<tr>
+<td>WC_CD</td>
+<td>number of common numbers in each question pair</td>
+</tr>
+<tr>
+<td>WC_VB</td>
+<td>number of common verbs in each question pair</td>
+</tr>
+<tr>
+<td>WC_JJ</td>
+<td>number of common adjective in each question pair</td>
+</tr>
+<tr>
+<td>nonlatin_shared</td>
+<td>number of common nonlatin characters in each question pair</td>
+</tr>
+<tr>
+<td>havewhat</td>
+<td>return 1 if a question contains what, otherwise return 0</td>
+</tr>
+<tr>
+<td>havewhen</td>
+<td>return 1 if a question contains when, otherwise return 0</td>
+</tr>
+<tr>
+<td>havewho</td>
+<td>return 1 if a question contains who, otherwise return 0</td>
+</tr>
+<tr>
+<td>havewhy</td>
+<td>return 1 if a question contains why, otherwise return 0</td>
+</tr>
+<tr>
+<td>havehow</td>
+<td>return 1 if a question contains how, otherwise return 0</td>
+</tr>
+<tr>
+<td>nonascii</td>
+<td>return 1 if a question contains nonascii characters, otherwise return 0</td>
+</tr>
+<tr>
+<td>nonlatin</td>
+<td>return 1 if a question contains nonlatin characters, otherwise return 0</td>
+</tr>
+</tbody>
+</table>
+<h3>Word2vec features</h3>
+<p>Word2vec is a two-layer neural network model that is used to produce word embeddings. Word2vec takes a large corpus of text as input
+and produces a vector space of several hundreds dimensions. Words with similar meanings are close in distance in their
+vector space. We imported the <a href="https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit">Google pretrained word2vec model</a>, and run the model using the gensim package in python. It 
+outputs a vector for each word in our data. Then, we computed the distance features which measures the similarity 
+between vectors, the skewness and kurtosis features which measure the shape of the distribution. </p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1_ND</td>
+<td>normalized word mover distance</td>
+</tr>
+<tr>
+<td>2_ND</td>
+<td>normalized word mover distance using 2-grams</td>
+</tr>
+<tr>
+<td>3_ND</td>
+<td>normalized word mover distance using 3-grams</td>
+</tr>
+<tr>
+<td>1_ND_w_stops</td>
+<td>normalized word mover distance after filtering stop words</td>
+</tr>
+<tr>
+<td>2_ND_w_stops</td>
+<td>normalized word mover distance using 2-grams after filtering stop words</td>
+</tr>
+<tr>
+<td>3_ND_w_stops</td>
+<td>normalized word mover distance using 3-grams after filtering stop words</td>
+</tr>
+<tr>
+<td>cosine_distance</td>
+<td>cosine distance</td>
+</tr>
+<tr>
+<td>cityblock_distance</td>
+<td>cityblock distance</td>
+</tr>
+<tr>
+<td>jaccard_distance</td>
+<td>jaccard distance</td>
+</tr>
+<tr>
+<td>canberra_distance</td>
+<td>canberra distance</td>
+</tr>
+<tr>
+<td>euclidean_distance</td>
+<td>euclidean distance</td>
+</tr>
+<tr>
+<td>minkowski_distance</td>
+<td>minkowski distance</td>
+</tr>
+<tr>
+<td>braycurtis_distance</td>
+<td>braycurtis distance</td>
+</tr>
+<tr>
+<td>skew_q1vec</td>
+<td>skewness of q1 vector</td>
+</tr>
+<tr>
+<td>skew_q2vec</td>
+<td>skewness of q1 vector</td>
+</tr>
+<tr>
+<td>kur_q1vec</td>
+<td>kurtosis of q1 vector</td>
+</tr>
+<tr>
+<td>kur_q2vec</td>
+<td>kurtosis of q2 vector</td>
+</tr>
+</tbody>
+</table>
+<h3>TF-IDF features</h3>
+<p><a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf">tf-idf</a>, short for term frequency-inverse document frequency, is a numerical statistic that measures the importance 
+of a word in a sentence. The importance is denoted by term frequency in a sentence (tf), and offset by the frequency of 
+the word in corpus(idf). </p>
+<p>![alt text][tfidf]</p>
+<p>For example, in the sentence 'How do I read and find my YouTube comments?', 'I' has the same term frequency as 'Youtube', 
+but 'I' has a higher frequency than 'Youtube' in the corpus, so the high frequency of 'I' 
+in this sentence is offset by the high frequency of 'I' in corpus, so 'I' is not important. On the other hand,
+'Youtube' has a high frequency in this sentence and low frequency in the corpus, so 'Youtube' is still considered as 
+important. Therefore, 'Youtube' has better prediction power than 'I'. In other words, the more rare a term is, the larger
+idf. </p>
+<p>After tfidf transformation, we crafted the following features</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tfidf_wm</td>
+<td>word match after tfidf</td>
+</tr>
+<tr>
+<td>tfidf_wm_stops</td>
+<td>word match after tfidf and filtering stop words</td>
+</tr>
+<tr>
+<td>2_SWC_IDF</td>
+<td>word match using 2-grams after tfidf</td>
+</tr>
+<tr>
+<td>3_SWC_IDF</td>
+<td>word match using 3-grams after tfidf</td>
+</tr>
+<tr>
+<td>2_SWC_IDF_w_stops word match using 2-grams after tfidf and filtering stop words</td>
+<td></td>
+</tr>
+<tr>
+<td>3_SWC_IDF_w_stops word match using 3-grams after tfidf and filtering stop words</td>
+<td></td>
+</tr>
+<tr>
+<td>1_ND_IDF</td>
+<td>normal distance after tfidf</td>
+</tr>
+<tr>
+<td>2_ND_IDF</td>
+<td>normal distance using 2-grams after tfidf</td>
+</tr>
+<tr>
+<td>3_ND_IDF</td>
+<td>normal distance using 3-grams after tfidf</td>
+</tr>
+<tr>
+<td>1_ND_IDF_w_stops</td>
+<td>normal distance after tfidf and filtering stop words</td>
+</tr>
+<tr>
+<td>2_ND_IDF</td>
+<td>normal distance using 2-grams after tfidf and filtering stop words</td>
+</tr>
+<tr>
+<td>3_ND_IDF</td>
+<td>normal distance using 3-grams after tfidf and filtering stop words</td>
+</tr>
+</tbody>
+</table>
+<h3>LSTMs (Long Short Term Memory networks) features</h3>
+<p>LSTMs is a special kind of recurrent neural network (RNN) which works very well in predicting sequential patterns such
+as text, speech, audio, video, physical processes, time series(sensor) data, anomaly detection, etc. 
+The details of LSTMs are well explained in the <a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">blog post</a> by Christopher Olah, and <a href="https://brohrer.github.io/blog.html">the blog post</a> by Brandon Rohrer.</p>
+<p>We converted each word in our dataset to an unique integer identifier after data clean and preprocessing.
+By Keras default embedding, it was converted to a embedding matrix. Feeding the embeding matrix to LSTMs, we obtained the
+output from 32 neurons which gives us 32 LSTM features. </p>
+<h3>Leak features</h3>
+<p>Leak features are playing an important role in this competition. It is useful in competition but not practical in real 
+world projects because we do not know the true target value for test dataset. </p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>q1_frequency</td>
+<td>the number of times question1 appearance in the dataset</td>
+</tr>
+<tr>
+<td>q2_frequency</td>
+<td>the number of times question2 appearance in the dataset</td>
+</tr>
+<tr>
+<td>q1_q2_intersect</td>
+<td>the number of shared questions question1 and question2 all formed question pairs with in the dataset</td>
+</tr>
+</tbody>
+</table>
+<h2>Machine Learning Models</h2>
+<p>We have built models including xgboost, random forest, logistic regression, neural network, and support vector machines. 
+Using different subsets of data, we built a total of 12 models. The best single model is a xgboost model with 83 features,
+it gives 0.15239 logloss on the public leaderboard.</p>
+<h2>Model Stacking</h2>
+<p>There are several ways to ensemble models, the most widely used methods include bagging, boosting and stacking. Here,
+we use stacking. The basic idea of stacking is to build different models which output intermediate prediction, also 
+called meta features. Those meta features are combined and fed into a new model to predict target.<br>
+<img alt="alt text" src="images/stacking.png"></p>
+<p>We stacked 12 models. Logloss reaches 0.15146 on the public leaderboard, which is almost 0.001 improvement on the best 
+single model.   </p>
+<p>It was so much fun and a great learning experience working on the Quora project with my talented team members. Thank you !</p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
+
+        </div>
+        <div class="col-sm-3" id="sidebar">
+            <aside>
+<div id="aboutme">
+        <p>
+            <img width="100%" class="img-thumbnail" src="https://emmating.github.io/images/profile_picture.png"/>
+        </p>
+</div><!-- Sidebar -->
+<section class="well well-sm">
+  <ul class="list-group list-group-flush">
+
+<!-- Sidebar/Social -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Social</span></h4>
+  <ul class="list-group" id="social">
+    <li class="list-group-item"><a href="https://www.linkedin.com/in/yanting-cao-a34ba726/"><i class="fa fa-linkedin-square fa-lg"></i> linkedin</a></li>
+    <li class="list-group-item"><a href="https://github.com/emmating"><i class="fa fa-github-square fa-lg"></i> github</a></li>
+  </ul>
+</li>
+<!-- End Sidebar/Social -->
+
+<!-- Sidebar/Categories -->
+<li class="list-group-item">
+  <h4><i class="fa fa-home fa-lg"></i><span class="icon-label">Categories</span></h4>
+  <ul class="list-group" id="categories">
+    <li class="list-group-item">
+      <a href="https://emmating.github.io/category/blog.html"><i class="fa fa-folder-open fa-lg"></i>Blog</a>
+    </li>
+    <li class="list-group-item">
+      <a href="https://emmating.github.io/category/projects.html"><i class="fa fa-folder-open fa-lg"></i>Projects</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Categories -->
+
+<!-- Sidebar/Tag Cloud -->
+<li class="list-group-item">
+  <a href="https://emmating.github.io/"><h4><i class="fa fa-tags fa-lg"></i><span class="icon-label">Tags</span></h4></a>
+  <ul class="list-group " id="tags">
+    <li class="list-group-item tag-1">
+      <a href="https://emmating.github.io/tag/python.html">Python</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://emmating.github.io/tag/neural-networks.html">Neural Networks</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://emmating.github.io/tag/geoencode.html">Geoencode</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://emmating.github.io/tag/text-analysis.html">Text Analysis</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://emmating.github.io/tag/tfidf.html">tfidf</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://emmating.github.io/tag/random-forest.html">Random Forest</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://emmating.github.io/tag/pelican.html">Pelican</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://emmating.github.io/tag/word2vec.html">Word2vec</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://emmating.github.io/tag/kaggle.html">Kaggle</a>
+    </li>
+    <li class="list-group-item tag-4">
+      <a href="https://emmating.github.io/tag/stacking.html">Stacking</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Tag Cloud -->
+
+<!-- Sidebar/Links -->
+<li class="list-group-item">
+  <h4><i class="fa fa-external-link-square fa-lg"></i><span class="icon-label">Links</span></h4>
+  <ul class="list-group" id="links">
+    <li class="list-group-item">
+      <a href="kaggle.com" target="_blank">Kaggle</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://rady.ucsd.edu/" target="_blank">Rady School of Management, UCSD</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://python.org/" target="_blank">Python.org</a>
+    </li>
+    <li class="list-group-item">
+      <a href="http://getpelican.com/" target="_blank">Pelican</a>
+    </li>
+  </ul>
+</li>
+<!-- End Sidebar/Links -->
+  </ul>
+</section>
+<!-- End Sidebar -->            </aside>
+        </div>
+    </div>
+</div>
+<footer>
+   <div class="container">
+      <hr>
+      <div class="row">
+         <div class="col-xs-10">&copy; 2017 Yanting Cao
+            &middot; Powered by <a href="https://github.com/getpelican/pelican-themes/tree/master/pelican-bootstrap3" target="_blank">pelican-bootstrap3</a>,
+            <a href="http://docs.getpelican.com/" target="_blank">Pelican</a>,
+            <a href="http://getbootstrap.com" target="_blank">Bootstrap</a>         </div>
+         <div class="col-xs-2"><p class="pull-right"><i class="fa fa-arrow-up"></i> <a href="#">Back to top</a></p></div>
+      </div>
+   </div>
+</footer>
+<script src="https://emmating.github.io/theme/js/jquery.min.js"></script>
+
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="https://emmating.github.io/theme/js/bootstrap.min.js"></script>
+
+<!-- Enable responsive features in IE8 with Respond.js (https://github.com/scottjehl/Respond) -->
+<script src="https://emmating.github.io/theme/js/respond.min.js"></script>
+
+    <script src="https://emmating.github.io/theme/js/bodypadding.js"></script>
+
+
+</body>
+</html>

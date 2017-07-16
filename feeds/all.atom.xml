@@ -1,5 +1,448 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Welcome to Yanting's Data Science Blog</title><link href="https://emmating.github.io/" rel="alternate"></link><link href="https://emmating.github.io/feeds/all.atom.xml" rel="self"></link><id>https://emmating.github.io/</id><updated>2017-06-23T16:45:00-07:00</updated><entry><title>Using Geopy for Spatial Data Analysis</title><link href="https://emmating.github.io/using-geopy-for-spatial-data-analysis.html" rel="alternate"></link><published>2017-06-23T16:45:00-07:00</published><updated>2017-06-23T16:45:00-07:00</updated><author><name>Yanting Cao</name></author><id>tag:emmating.github.io,2017-06-23:/using-geopy-for-spatial-data-analysis.html</id><summary type="html">&lt;p&gt;&lt;a href="https://geopy.readthedocs.io/en/1.10.0/"&gt;Geopy&lt;/a&gt; is a useful python package to deal with spatial data, such as locating the coordinates of addresses, cities, countries, 
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Welcome to Yanting's Data Science Blog</title><link href="https://emmating.github.io/" rel="alternate"></link><link href="https://emmating.github.io/feeds/all.atom.xml" rel="self"></link><id>https://emmating.github.io/</id><updated>2017-07-12T16:45:00-07:00</updated><entry><title>Identifying Duplicate Quora Question Pairs (Kaggle Competition)</title><link href="https://emmating.github.io/identifying-duplicate-quora-question-pairs-kaggle-competition.html" rel="alternate"></link><published>2017-07-12T16:45:00-07:00</published><updated>2017-07-12T16:45:00-07:00</updated><author><name>Yanting Cao</name></author><id>tag:emmating.github.io,2017-07-12:/identifying-duplicate-quora-question-pairs-kaggle-competition.html</id><summary type="html">&lt;ul&gt;
+&lt;li&gt;We explored the current methods in NLP, including word2vec embedding (gensim package in python), LSTMs(use keras neural networks API), tf-idf, python nltk package, etc. &lt;/li&gt;
+&lt;li&gt;We built machine learning models which identified duplicate Quora question pairs with high accuracy (logloss ~0.151)&lt;/li&gt;
+&lt;li&gt;We are ranked top 8% in this Kaggle …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;ul&gt;
+&lt;li&gt;We explored the current methods in NLP, including word2vec embedding (gensim package in python), LSTMs(use keras neural networks API), tf-idf, python nltk package, etc. &lt;/li&gt;
+&lt;li&gt;We built machine learning models which identified duplicate Quora question pairs with high accuracy (logloss ~0.151)&lt;/li&gt;
+&lt;li&gt;We are ranked top 8% in this Kaggle competition among 3307 teams who participated, and got a Bronze Medal.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Table of Contents&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;a href="## Problem to Solve"&gt;Problem to Solve&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;[Methods Overview] (## Methods Overview)&lt;/li&gt;
+&lt;li&gt;&lt;a href="## EDA of Quora Dataset"&gt;EDA of Quora Dataset&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="## Feature Engineering"&gt;Feature Engineering&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href="### Basic Features"&gt;Basic Features&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="### NLTK Features"&gt;NLTK Features&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="### Word2vec features"&gt;Word2vec features&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="### TF-IDF features"&gt;TF-IDF features&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="### LSTMs features"&gt;LSTMs features&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href="## Machine Learning Models"&gt;Machine Learning Models&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="## Model Ensemble"&gt;Model Ensemble&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Problem to Solve - Identifying Duplicate Questions&lt;/h2&gt;
+&lt;p&gt;Quora is a question-and-answer online platform where questions are asked, answered, edited and organized 
+by its community of users. Very often, people ask differently worded questions but with the same meaning. Multiple questions
+with the same intent cause the seekers more time to find the best answers to their questions, and also cause the writers feel
+they need to answer multiple versions of the same question. &lt;strong&gt;Identifying duplicate questions&lt;/strong&gt; will provide better experience
+for both the users and writers. &lt;/p&gt;
+&lt;p&gt;For example, the following question pairs are duplicates:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;question 1: How do I read and find my YouTube comments? vs question 2: How can I see all my Youtube comments?&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;question 3: What are some examples of products that can be make from crude oil? vs question 4: What are some of the products made from crude oil?&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The following question pairs are not duplicates:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;question 5: What is the step by step guide to invest in share market? vs question 6: What is the step by step guide to invest in share market in india?&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;question 7: What's causing someone to be jealous? vs question 8: What can I do to avoid being jealous of someone?&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Methods Overview:&lt;/h2&gt;
+&lt;p&gt;To identify duplicate questions, we extracted features from text data including basic NLP, word2vec embedding, TF-IDF, LSTMs. 
+We trained the features with Random Forest model, xgboost model, logistic regression and neural networks. 
+Finally, we ensembled 12 models to make the final model more robust and to improve accuracy. &lt;/p&gt;
+&lt;h2&gt;EDA of Quora Dataset&lt;/h2&gt;
+&lt;p&gt;The &lt;a href="https://www.kaggle.com/c/quora-question-pairs/data"&gt;Quora dataset&lt;/a&gt; provided by Kaggle contains a train dataset and a test dataset. The train dataset consists 404290 question
+pairs with each pairs labeled as 1(duplicate) or 0 (not duplicate). The test dataset consists 2345796 question pairs without 
+labels, which is 5.8 fold as much as the train dataset. Evaluations are based on logloss between the predicted value and ground
+truth. &lt;/p&gt;
+&lt;p&gt;Let's take a look at the dataset. &lt;/p&gt;
+&lt;p&gt;Data fields: id - id of the question pairs; qid1 - id of question 1; qid2 - id of question 2; question1 - full text of question 1;
+question2 - full text of question 2&lt;/p&gt;
+&lt;p&gt;&lt;img alt="alt text" src="images/train_head.png"&gt;&lt;/p&gt;
+&lt;p&gt;Data distribution by label&lt;/p&gt;
+&lt;p&gt;&lt;img alt="alt text" src="images/data_distribution_by_target_variable.png"&gt;&lt;/p&gt;
+&lt;p&gt;We did Exploratory Data Analysis (EDA) and found the following features between train and test dataset. The values in train 
+and test dataset are very close.  &lt;/p&gt;
+&lt;p&gt;number of words:
+- Median in train: 10.0 test: 10.0
+- Average in train: 11.06 test: 11.02
+- Maximum in train: 237 test: 238
+- Minimum in train: 1 test: 1&lt;/p&gt;
+&lt;p&gt;number of characters:
+- Median in train: 51.0 test: 53.0
+- Average in train: 59.82 test: 60.07
+- Maximum in train: 1169 test: 1176
+- Minimum in train: 1 test: 1&lt;/p&gt;
+&lt;p&gt;We found that the number of common words between question pairs may be a good feature in building our prediction model. &lt;/p&gt;
+&lt;p&gt;&lt;img alt="alt text" src="images/common_unigram_counts.png"&gt;&lt;/p&gt;
+&lt;h2&gt;Feature Engineering&lt;/h2&gt;
+&lt;p&gt;Feature engineering is a major part in building good machine learning models. We applied various methods to
+extract features from text data. We used the following feature engineering methods, including basic features, NLP
+features, word2vec features, TF-IDF transformation features, LSTM features as well as leaky features. I will cover
+each methods as follows. &lt;/p&gt;
+&lt;h3&gt;Basic Features&lt;/h3&gt;
+&lt;p&gt;We crafted the following 18 basic features:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Feature&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;len_q&lt;/td&gt;
+&lt;td&gt;length of characters in question inclduing whitespaces&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;len_char_q&lt;/td&gt;
+&lt;td&gt;number of characters in question without whitespaces&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;diff_len&lt;/td&gt;
+&lt;td&gt;difference in character length between question pairs&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;char_diff_unq_stop&lt;/td&gt;
+&lt;td&gt;difference in number of characters between question pairs after filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;char_ratio&lt;/td&gt;
+&lt;td&gt;ratio of character length between question pairs&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;len_word_q&lt;/td&gt;
+&lt;td&gt;number of words in question&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;wc_diff&lt;/td&gt;
+&lt;td&gt;difference in number of words between question pairs&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;wc_diff_unique&lt;/td&gt;
+&lt;td&gt;difference in number of unique words between question paris&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;wc_diff_unq_stop&lt;/td&gt;
+&lt;td&gt;difference in number of unique words between question pairs after filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;wc_ratio&lt;/td&gt;
+&lt;td&gt;ratio of word length between question pairs&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;wc_unique_ratio&lt;/td&gt;
+&lt;td&gt;ratio of unique word length between question pairs&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;wc_ratio_unique_stop&lt;/td&gt;
+&lt;td&gt;ratio of unique word length between q1 and q2 after filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;total_unique_words&lt;/td&gt;
+&lt;td&gt;number of unique words in each question pair&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;total_unique_words_w_stop&lt;/td&gt;
+&lt;td&gt;number of unique words in each question pair after filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;common_words&lt;/td&gt;
+&lt;td&gt;number of common words in each question pair&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;word_match&lt;/td&gt;
+&lt;td&gt;number of common words in question pairs over total number of words in question pairs after filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2_SWC&lt;/td&gt;
+&lt;td&gt;word match using 2-grams&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3_SWC&lt;/td&gt;
+&lt;td&gt;word match using 3-grams&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1_SWC_w_stops&lt;/td&gt;
+&lt;td&gt;word match after filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2_SWC_w_stops&lt;/td&gt;
+&lt;td&gt;word match using 2-grams after filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3_SWC_w_stops&lt;/td&gt;
+&lt;td&gt;word match using 3-grams after filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Jaccard&lt;/td&gt;
+&lt;td&gt;the shared words count over total words count in each question pair&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;same_start&lt;/td&gt;
+&lt;td&gt;return 1 if a question pair has same start word, otherwise return 0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3&gt;NLTK Features&lt;/h3&gt;
+&lt;p&gt;We used nltk package in Python, and crafted the following features. &lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Feature&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;WC_NN&lt;/td&gt;
+&lt;td&gt;number of common nouns in each question pair&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;WC_CD&lt;/td&gt;
+&lt;td&gt;number of common numbers in each question pair&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;WC_VB&lt;/td&gt;
+&lt;td&gt;number of common verbs in each question pair&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;WC_JJ&lt;/td&gt;
+&lt;td&gt;number of common adjective in each question pair&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;nonlatin_shared&lt;/td&gt;
+&lt;td&gt;number of common nonlatin characters in each question pair&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;havewhat&lt;/td&gt;
+&lt;td&gt;return 1 if a question contains what, otherwise return 0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;havewhen&lt;/td&gt;
+&lt;td&gt;return 1 if a question contains when, otherwise return 0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;havewho&lt;/td&gt;
+&lt;td&gt;return 1 if a question contains who, otherwise return 0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;havewhy&lt;/td&gt;
+&lt;td&gt;return 1 if a question contains why, otherwise return 0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;havehow&lt;/td&gt;
+&lt;td&gt;return 1 if a question contains how, otherwise return 0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;nonascii&lt;/td&gt;
+&lt;td&gt;return 1 if a question contains nonascii characters, otherwise return 0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;nonlatin&lt;/td&gt;
+&lt;td&gt;return 1 if a question contains nonlatin characters, otherwise return 0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3&gt;Word2vec features&lt;/h3&gt;
+&lt;p&gt;Word2vec is a two-layer neural network model that is used to produce word embeddings. Word2vec takes a large corpus of text as input
+and produces a vector space of several hundreds dimensions. Words with similar meanings are close in distance in their
+vector space. We imported the &lt;a href="https://drive.google.com/file/d/0B7XkCwpI5KDYNlNUTTlSS21pQmM/edit"&gt;Google pretrained word2vec model&lt;/a&gt;, and run the model using the gensim package in python. It 
+outputs a vector for each word in our data. Then, we computed the distance features which measures the similarity 
+between vectors, the skewness and kurtosis features which measure the shape of the distribution. &lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Feature&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;1_ND&lt;/td&gt;
+&lt;td&gt;normalized word mover distance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2_ND&lt;/td&gt;
+&lt;td&gt;normalized word mover distance using 2-grams&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3_ND&lt;/td&gt;
+&lt;td&gt;normalized word mover distance using 3-grams&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1_ND_w_stops&lt;/td&gt;
+&lt;td&gt;normalized word mover distance after filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2_ND_w_stops&lt;/td&gt;
+&lt;td&gt;normalized word mover distance using 2-grams after filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3_ND_w_stops&lt;/td&gt;
+&lt;td&gt;normalized word mover distance using 3-grams after filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;cosine_distance&lt;/td&gt;
+&lt;td&gt;cosine distance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;cityblock_distance&lt;/td&gt;
+&lt;td&gt;cityblock distance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;jaccard_distance&lt;/td&gt;
+&lt;td&gt;jaccard distance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;canberra_distance&lt;/td&gt;
+&lt;td&gt;canberra distance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;euclidean_distance&lt;/td&gt;
+&lt;td&gt;euclidean distance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;minkowski_distance&lt;/td&gt;
+&lt;td&gt;minkowski distance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;braycurtis_distance&lt;/td&gt;
+&lt;td&gt;braycurtis distance&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;skew_q1vec&lt;/td&gt;
+&lt;td&gt;skewness of q1 vector&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;skew_q2vec&lt;/td&gt;
+&lt;td&gt;skewness of q1 vector&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kur_q1vec&lt;/td&gt;
+&lt;td&gt;kurtosis of q1 vector&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;kur_q2vec&lt;/td&gt;
+&lt;td&gt;kurtosis of q2 vector&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3&gt;TF-IDF features&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf"&gt;tf-idf&lt;/a&gt;, short for term frequency-inverse document frequency, is a numerical statistic that measures the importance 
+of a word in a sentence. The importance is denoted by term frequency in a sentence (tf), and offset by the frequency of 
+the word in corpus(idf). &lt;/p&gt;
+&lt;p&gt;![alt text][tfidf]&lt;/p&gt;
+&lt;p&gt;For example, in the sentence 'How do I read and find my YouTube comments?', 'I' has the same term frequency as 'Youtube', 
+but 'I' has a higher frequency than 'Youtube' in the corpus, so the high frequency of 'I' 
+in this sentence is offset by the high frequency of 'I' in corpus, so 'I' is not important. On the other hand,
+'Youtube' has a high frequency in this sentence and low frequency in the corpus, so 'Youtube' is still considered as 
+important. Therefore, 'Youtube' has better prediction power than 'I'. In other words, the more rare a term is, the larger
+idf. &lt;/p&gt;
+&lt;p&gt;After tfidf transformation, we crafted the following features&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Feature&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;tfidf_wm&lt;/td&gt;
+&lt;td&gt;word match after tfidf&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;tfidf_wm_stops&lt;/td&gt;
+&lt;td&gt;word match after tfidf and filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2_SWC_IDF&lt;/td&gt;
+&lt;td&gt;word match using 2-grams after tfidf&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3_SWC_IDF&lt;/td&gt;
+&lt;td&gt;word match using 3-grams after tfidf&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2_SWC_IDF_w_stops word match using 2-grams after tfidf and filtering stop words&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3_SWC_IDF_w_stops word match using 3-grams after tfidf and filtering stop words&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1_ND_IDF&lt;/td&gt;
+&lt;td&gt;normal distance after tfidf&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2_ND_IDF&lt;/td&gt;
+&lt;td&gt;normal distance using 2-grams after tfidf&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3_ND_IDF&lt;/td&gt;
+&lt;td&gt;normal distance using 3-grams after tfidf&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;1_ND_IDF_w_stops&lt;/td&gt;
+&lt;td&gt;normal distance after tfidf and filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;2_ND_IDF&lt;/td&gt;
+&lt;td&gt;normal distance using 2-grams after tfidf and filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;3_ND_IDF&lt;/td&gt;
+&lt;td&gt;normal distance using 3-grams after tfidf and filtering stop words&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3&gt;LSTMs (Long Short Term Memory networks) features&lt;/h3&gt;
+&lt;p&gt;LSTMs is a special kind of recurrent neural network (RNN) which works very well in predicting sequential patterns such
+as text, speech, audio, video, physical processes, time series(sensor) data, anomaly detection, etc. 
+The details of LSTMs are well explained in the &lt;a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/"&gt;blog post&lt;/a&gt; by Christopher Olah, and &lt;a href="https://brohrer.github.io/blog.html"&gt;the blog post&lt;/a&gt; by Brandon Rohrer.&lt;/p&gt;
+&lt;p&gt;We converted each word in our dataset to an unique integer identifier after data clean and preprocessing.
+By Keras default embedding, it was converted to a embedding matrix. Feeding the embeding matrix to LSTMs, we obtained the
+output from 32 neurons which gives us 32 LSTM features. &lt;/p&gt;
+&lt;h3&gt;Leak features&lt;/h3&gt;
+&lt;p&gt;Leak features are playing an important role in this competition. It is useful in competition but not practical in real 
+world projects because we do not know the true target value for test dataset. &lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Feature&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;q1_frequency&lt;/td&gt;
+&lt;td&gt;the number of times question1 appearance in the dataset&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;q2_frequency&lt;/td&gt;
+&lt;td&gt;the number of times question2 appearance in the dataset&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;q1_q2_intersect&lt;/td&gt;
+&lt;td&gt;the number of shared questions question1 and question2 all formed question pairs with in the dataset&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2&gt;Machine Learning Models&lt;/h2&gt;
+&lt;p&gt;We have built models including xgboost, random forest, logistic regression, neural network, and support vector machines. 
+Using different subsets of data, we built a total of 12 models. The best single model is a xgboost model with 83 features,
+it gives 0.15239 logloss on the public leaderboard.&lt;/p&gt;
+&lt;h2&gt;Model Stacking&lt;/h2&gt;
+&lt;p&gt;There are several ways to ensemble models, the most widely used methods include bagging, boosting and stacking. Here,
+we use stacking. The basic idea of stacking is to build different models which output intermediate prediction, also 
+called meta features. Those meta features are combined and fed into a new model to predict target.&lt;br&gt;
+&lt;img alt="alt text" src="images/stacking.png"&gt;&lt;/p&gt;
+&lt;p&gt;We stacked 12 models. Logloss reaches 0.15146 on the public leaderboard, which is almost 0.001 improvement on the best 
+single model.   &lt;/p&gt;
+&lt;p&gt;It was so much fun and a great learning experience working on the Quora project with my talented team members. Thank you !&lt;/p&gt;</content><category term="NLP"></category><category term="Neural Networks"></category><category term="LSTMs"></category><category term="tfidf"></category><category term="Word2vec"></category><category term="Gradient Boosting"></category><category term="Random Forest"></category><category term="Stacking"></category><category term="Kaggle"></category><category term="Python"></category></entry><entry><title>Using Geopy for Spatial Data Analysis</title><link href="https://emmating.github.io/using-geopy-for-spatial-data-analysis.html" rel="alternate"></link><published>2017-06-23T16:45:00-07:00</published><updated>2017-06-23T16:45:00-07:00</updated><author><name>Yanting Cao</name></author><id>tag:emmating.github.io,2017-06-23:/using-geopy-for-spatial-data-analysis.html</id><summary type="html">&lt;p&gt;&lt;a href="https://geopy.readthedocs.io/en/1.10.0/"&gt;Geopy&lt;/a&gt; is a useful python package to deal with spatial data, such as locating the coordinates of addresses, cities, countries, 
 and landmarks or reverse. In the &lt;a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries"&gt;Two Sigma Connect Competition&lt;/a&gt; in &lt;a href="https://www.kaggle.com/"&gt;Kaggle&lt;/a&gt;, I found that some of the given latitude longitude
 do not match the addresses, so I use Geopy …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;a href="https://geopy.readthedocs.io/en/1.10.0/"&gt;Geopy&lt;/a&gt; is a useful python package to deal with spatial data, such as locating the coordinates of addresses, cities, countries, 
 and landmarks or reverse. In the &lt;a href="https://www.kaggle.com/c/two-sigma-connect-rental-listing-inquiries"&gt;Two Sigma Connect Competition&lt;/a&gt; in &lt;a href="https://www.kaggle.com/"&gt;Kaggle&lt;/a&gt;, I found that some of the given latitude longitude
@@ -86,7 +529,8 @@ There are some addresses that appear more frequent in our training set.
 It took me several days to research, set up and write my blog, but I feel it can be much easier and faster 
 to build a Pelican blog, so I am sharing with …&lt;/p&gt;</summary><content type="html">&lt;p&gt;After completed several data science projects, I am eager to document them and share them with people. 
 It took me several days to research, set up and write my blog, but I feel it can be much easier and faster 
-to build a Pelican blog, so I am sharing with you the lessons I have learned in building my first data science blog.  &lt;/p&gt;
+to build a Pelican blog, so I am sharing with you the lessons I have learned in building my first data science blog,
+the code is available &lt;a href="https://github.com/emmating/emmating.github.io"&gt;here&lt;/a&gt;.  &lt;/p&gt;
 &lt;h2&gt;Table of Contents&lt;/h2&gt;
 &lt;ol&gt;
 &lt;li&gt;&lt;a href="### Find a Static Site Generator"&gt;Find a Static Site Generator&lt;/a&gt;&lt;/li&gt;
@@ -247,5 +691,5 @@ BANNER_SUBTITLE = &amp;#39;This is my subtitle&amp;#39;
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;Now, we have built our first Pelican blog, &lt;a href="https://github.com/emmating/emmating.github.io"&gt;here&lt;/a&gt; is the code on my github. Many thanks to &lt;a href="http://docs.getpelican.com/en/stable/#"&gt;Pelican&lt;/a&gt;, the free static site generator, as well as to &lt;a href="http://dandydev.net/about"&gt;Daan Debie&lt;/a&gt;,
+&lt;p&gt;Now, we have built our first Pelican blog. Many thanks to &lt;a href="http://docs.getpelican.com/en/stable/#"&gt;Pelican&lt;/a&gt;, the free static site generator, as well as to &lt;a href="http://dandydev.net/about"&gt;Daan Debie&lt;/a&gt;,
 author of bootstrap3. Let's now start writing in our blogs ! &lt;/p&gt;</content><category term="Python"></category><category term="Pelican"></category></entry></feed>
