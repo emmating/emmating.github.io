@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Welcome to Yanting's Data Science Blog - Projects</title><link href="https://emmating.github.io/" rel="alternate"></link><link href="https://emmating.github.io/feeds/projects.atom.xml" rel="self"></link><id>https://emmating.github.io/</id><updated>2017-07-16T17:00:00-07:00</updated><entry><title>Identifying Duplicate Quora Question Pairs (Kaggle Competition)</title><link href="https://emmating.github.io/identifying-duplicate-quora-question-pairs-kaggle-competition.html" rel="alternate"></link><published>2017-07-16T17:00:00-07:00</published><updated>2017-07-16T17:00:00-07:00</updated><author><name>Yanting Cao</name></author><id>tag:emmating.github.io,2017-07-16:/identifying-duplicate-quora-question-pairs-kaggle-competition.html</id><summary type="html">&lt;ul&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Welcome to Yanting's Data Science Blog - Projects</title><link href="https://emmating.github.io/" rel="alternate"></link><link href="https://emmating.github.io/feeds/projects.atom.xml" rel="self"></link><id>https://emmating.github.io/</id><updated>2017-07-16T17:00:00-07:00</updated><entry><title>Identifying Duplicate Quora Question Pairs (Kaggle Competition Bronze Medal)</title><link href="https://emmating.github.io/identifying-duplicate-quora-question-pairs-kaggle-competition-bronze-medal.html" rel="alternate"></link><published>2017-07-16T17:00:00-07:00</published><updated>2017-07-16T17:00:00-07:00</updated><author><name>Yanting Cao</name></author><id>tag:emmating.github.io,2017-07-16:/identifying-duplicate-quora-question-pairs-kaggle-competition-bronze-medal.html</id><summary type="html">&lt;ul&gt;
 &lt;li&gt;We explored the current methods in NLP, including word2vec embedding (gensim package in python), LSTMs(use keras neural networks API), tf-idf, python nltk package, etc. &lt;/li&gt;
 &lt;li&gt;We built machine learning models which identified duplicate Quora question pairs with high accuracy (logloss ~0.151)&lt;/li&gt;
 &lt;li&gt;We are ranked top 8% in this Kaggle …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;ul&gt;
@@ -9,7 +9,7 @@
 &lt;/ul&gt;
 &lt;h2&gt;Table of Contents&lt;/h2&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a href="## Problem to Solve"&gt;Problem to Solve&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="## Problem Description"&gt;Problem Description&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;[Methods Overview] (## Methods Overview)&lt;/li&gt;
 &lt;li&gt;&lt;a href="## EDA of Quora Dataset"&gt;EDA of Quora Dataset&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="## Feature Engineering"&gt;Feature Engineering&lt;/a&gt;&lt;ul&gt;
@@ -23,7 +23,7 @@
 &lt;li&gt;&lt;a href="## Machine Learning Models"&gt;Machine Learning Models&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="## Model Ensemble"&gt;Model Ensemble&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h2&gt;Problem to Solve - Identifying Duplicate Questions&lt;/h2&gt;
+&lt;h2&gt;Problem Description - Identifying Duplicate Questions&lt;/h2&gt;
 &lt;p&gt;Quora is a question-and-answer online platform where questions are asked, answered, edited and organized 
 by its community of users. Very often, people ask differently worded questions but with the same meaning. Multiple questions
 with the same intent cause the seekers more time to find the best answers to their questions, and also cause the writers feel

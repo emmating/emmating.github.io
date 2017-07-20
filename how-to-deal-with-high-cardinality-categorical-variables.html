@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="english" prefix="og: http://ogp.me/ns# fb: https://www.facebook.com/2008/fbml">
 <head>
-    <title>Projects - Welcome to Yanting's Data Science Blog</title>
+    <title>How to Deal with High Cardinality Categorical Variables - Welcome to Yanting's Data Science Blog</title>
     <!-- Using the latest rendering mode for IE -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
@@ -9,16 +9,19 @@
 
 
 
+<link rel="canonical" href="https://emmating.github.io/how-to-deal-with-high-cardinality-categorical-variables.html">
 
-    <meta name="author" content="Yanting Cao" />
-    <meta name="keywords" content="Projects" />
+        <meta name="author" content="Yanting Cao" />
+        <meta name="description" content="Background and Methods In machine learning problems, we encounter categorical features very often, such as gender, address, zip code, etc. For low cardinality attributes, which only takes a small number of possible values, one hot encoding (OHE) is widely used. This encoding scheme represents each value of the original categorical …" />
 
-    <!-- Open Graph tags -->
         <meta property="og:site_name" content="Welcome to Yanting's Data Science Blog" />
-        <meta property="og:type" content="website"/>
-        <meta property="og:title" content="Welcome to Yanting's Data Science Blog"/>
-        <meta property="og:url" content="https://emmating.github.io"/>
-        <meta property="og:description" content="Welcome to Yanting's Data Science Blog"/>
+        <meta property="og:type" content="article"/>
+        <meta property="og:title" content="How to Deal with High Cardinality Categorical Variables"/>
+        <meta property="og:url" content="https://emmating.github.io/how-to-deal-with-high-cardinality-categorical-variables.html"/>
+        <meta property="og:description" content="Background and Methods In machine learning problems, we encounter categorical features very often, such as gender, address, zip code, etc. For low cardinality attributes, which only takes a small number of possible values, one hot encoding (OHE) is widely used. This encoding scheme represents each value of the original categorical …"/>
+        <meta property="article:published_time" content="2017-07-17" />
+            <meta property="article:section" content="Blog" />
+            <meta property="article:author" content="Yanting Cao" />
 
 
     <!-- Bootstrap -->
@@ -33,8 +36,8 @@
 
 
 
-        <link href="https://emmating.github.io/feeds/projects.atom.xml" type="application/atom+xml" rel="alternate"
-              title="Welcome to Yanting's Data Science Blog Projects ATOM Feed"/>
+        <link href="https://emmating.github.io/feeds/blog.atom.xml" type="application/atom+xml" rel="alternate"
+              title="Welcome to Yanting's Data Science Blog Blog ATOM Feed"/>
 
 </head>
 <body>
@@ -56,10 +59,10 @@ Welcome to Yanting's Data Science Blog            </a>
                          <li><a href="https://emmating.github.io/pages/about-me.html">
                              About Me
                           </a></li>
-                        <li >
+                        <li class="active">
                             <a href="https://emmating.github.io/category/blog.html">Blog</a>
                         </li>
-                        <li class="active">
+                        <li >
                             <a href="https://emmating.github.io/category/projects.html">Projects</a>
                         </li>
             </ul>
@@ -74,75 +77,56 @@ Welcome to Yanting's Data Science Blog            </a>
 <div class="container">
     <div class="row">
         <div class="col-sm-9">
-            <article>
-                <h2><a href="https://emmating.github.io/identifying-duplicate-quora-question-pairs-kaggle-competition-bronze-medal.html">Identifying Duplicate Quora Question Pairs (Kaggle Competition Bronze Medal)</a></h2>
-                    <div class="well well-sm">
+    <section id="content">
+        <article>
+            <header class="page-header">
+                <h1>
+                    <a href="https://emmating.github.io/how-to-deal-with-high-cardinality-categorical-variables.html"
+                       rel="bookmark"
+                       title="Permalink to How to Deal with High Cardinality Categorical Variables">
+                        How to Deal with High Cardinality Categorical Variables
+                    </a>
+                </h1>
+            </header>
+            <div class="entry-content">
+                <div class="panel">
+                    <div class="panel-body">
 <footer class="post-info">
     <span class="label label-default">Date</span>
     <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2017-07-16T17:00:00-07:00"> Sun 16 July 2017</time>
+        <i class="fa fa-calendar"></i><time datetime="2017-07-17T16:45:00-07:00"> Mon 17 July 2017</time>
     </span>
 
 
 
 
 
-<span class="label label-default">Tags</span>
-	<a href="https://emmating.github.io/tag/nlp.html">NLP</a>
-        /
-	<a href="https://emmating.github.io/tag/neural-networks.html">Neural Networks</a>
-        /
-	<a href="https://emmating.github.io/tag/lstms.html">LSTMs</a>
-        /
-	<a href="https://emmating.github.io/tag/tfidf.html">tfidf</a>
-        /
-	<a href="https://emmating.github.io/tag/word2vec.html">Word2vec</a>
-        /
-	<a href="https://emmating.github.io/tag/gradient-boosting.html">Gradient Boosting</a>
-        /
-	<a href="https://emmating.github.io/tag/random-forest.html">Random Forest</a>
-        /
-	<a href="https://emmating.github.io/tag/stacking.html">Stacking</a>
-        /
-	<a href="https://emmating.github.io/tag/kaggle.html">Kaggle</a>
-        /
-	<a href="https://emmating.github.io/tag/python.html">Python</a>
     
 </footer><!-- /.post-info -->                    </div>
-                <div class="summary"><ul>
-<li>We explored the current methods in NLP, including word2vec embedding (gensim package in python), LSTMs(use keras neural networks API), tf-idf, python nltk package, etc. </li>
-<li>We built machine learning models which identified duplicate Quora question pairs with high accuracy (logloss ~0.151)</li>
-<li>We are ranked top 8% in this Kaggle …</li></ul>
-                    <a class="btn btn-default btn-xs" href="https://emmating.github.io/identifying-duplicate-quora-question-pairs-kaggle-competition-bronze-medal.html">more ...</a>
                 </div>
-            </article>
-            <hr/>
-            <article>
-                <h2><a href="https://emmating.github.io/how-i-build-my-first-pelican-blog.html">How I Build My First Pelican Blog</a></h2>
-                    <div class="well well-sm">
-<footer class="post-info">
-    <span class="label label-default">Date</span>
-    <span class="published">
-        <i class="fa fa-calendar"></i><time datetime="2017-06-14T16:45:00-07:00"> Wed 14 June 2017</time>
-    </span>
-
-
-
-
-
-<span class="label label-default">Tags</span>
-	<a href="https://emmating.github.io/tag/python.html">Python</a>
-        /
-	<a href="https://emmating.github.io/tag/pelican.html">Pelican</a>
-    
-</footer><!-- /.post-info -->                    </div>
-                <div class="summary"><p>After completed several data science projects, I am eager to document them and share them with people. 
-It took me several days to research, set up and write my blog, but I feel it can be much easier and faster 
-to build a Pelican blog, so I am sharing with …</p>
-                    <a class="btn btn-default btn-xs" href="https://emmating.github.io/how-i-build-my-first-pelican-blog.html">more ...</a>
-                </div>
-            </article>
-            <hr/>
+                <h3>Background and Methods</h3>
+<p>In machine learning problems, we encounter categorical features very often, such as gender, address, zip code, etc. 
+For low cardinality attributes, which only takes a small number of possible values, one hot encoding (OHE) is widely used.
+This encoding scheme represents each value of the original categorical with a binary vector with the i-th component 
+set to one, and the rest set to zero. However, when having a high cardinality categorical feature with many unique values, 
+OHE will give an extremely large sparse matrix, making it hard for application. </p>
+<p>The most frequently used method for dealing with high cardinality attributes is clustering. The basic idea is to reduce 
+the N different sets of values to K different sets of values, where K &lt; N. There are several value grouping schemes, 
+including grouping values that exhibit similar target statistics (hierarchical clustering), or to use 
+information-theoretical metric to merge each possible pair of clusters. Another methodis to use 
+Principle Component Analysis (PCA) to reduce categorical data to a numerical representation. </p>
+<h3>Categorical Encoding Using Target Statistics</h3>
+<p>The basic idea is to map individual values of a high-cardinality categorical attribute to an estimate of the probability
+or expected values of the dependent attribute. Let's take the 'building_id' attribute from the Two Sigma Connect Rental Listing
+Competition as an example. The 'building_id' attribute is a high cardinality attribute having 7585 unique values. The target 
+variable takes 3 values: high, medium, and low. We map the individual values X<sub>i</sub> to a scaler S<sub>i</sub>, 
+representing an estimate of the probability of Y = c given X = X<sub>i</sub></p>
+<p><img alt="alt text" src="images/tsc_high_cardinality.png"></p>
+<p>Be careful of data leakage if you use cross validation. </p>
+            </div>
+            <!-- /.entry-content -->
+        </article>
+    </section>
 
         </div>
         <div class="col-sm-3" id="sidebar">

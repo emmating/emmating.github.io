@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Welcome to Yanting's Data Science Blog</title><link href="https://emmating.github.io/" rel="alternate"></link><link href="https://emmating.github.io/feeds/all.atom.xml" rel="self"></link><id>https://emmating.github.io/</id><updated>2017-07-16T17:00:00-07:00</updated><entry><title>Identifying Duplicate Quora Question Pairs (Kaggle Competition)</title><link href="https://emmating.github.io/identifying-duplicate-quora-question-pairs-kaggle-competition.html" rel="alternate"></link><published>2017-07-16T17:00:00-07:00</published><updated>2017-07-16T17:00:00-07:00</updated><author><name>Yanting Cao</name></author><id>tag:emmating.github.io,2017-07-16:/identifying-duplicate-quora-question-pairs-kaggle-competition.html</id><summary type="html">&lt;ul&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Welcome to Yanting's Data Science Blog</title><link href="https://emmating.github.io/" rel="alternate"></link><link href="https://emmating.github.io/feeds/all.atom.xml" rel="self"></link><id>https://emmating.github.io/</id><updated>2017-07-17T16:45:00-07:00</updated><entry><title>How to Deal with High Cardinality Categorical Variables</title><link href="https://emmating.github.io/how-to-deal-with-high-cardinality-categorical-variables.html" rel="alternate"></link><published>2017-07-17T16:45:00-07:00</published><updated>2017-07-17T16:45:00-07:00</updated><author><name>Yanting Cao</name></author><id>tag:emmating.github.io,2017-07-17:/how-to-deal-with-high-cardinality-categorical-variables.html</id><summary type="html">&lt;h3&gt;Background and Methods&lt;/h3&gt;
+&lt;p&gt;In machine learning problems, we encounter categorical features very often, such as gender, address, zip code, etc. 
+For low cardinality attributes, which only takes a small number of possible values, one hot encoding (OHE) is widely used.
+This encoding scheme represents each value of the original categorical …&lt;/p&gt;</summary><content type="html">&lt;h3&gt;Background and Methods&lt;/h3&gt;
+&lt;p&gt;In machine learning problems, we encounter categorical features very often, such as gender, address, zip code, etc. 
+For low cardinality attributes, which only takes a small number of possible values, one hot encoding (OHE) is widely used.
+This encoding scheme represents each value of the original categorical with a binary vector with the i-th component 
+set to one, and the rest set to zero. However, when having a high cardinality categorical feature with many unique values, 
+OHE will give an extremely large sparse matrix, making it hard for application. &lt;/p&gt;
+&lt;p&gt;The most frequently used method for dealing with high cardinality attributes is clustering. The basic idea is to reduce 
+the N different sets of values to K different sets of values, where K &amp;lt; N. There are several value grouping schemes, 
+including grouping values that exhibit similar target statistics (hierarchical clustering), or to use 
+information-theoretical metric to merge each possible pair of clusters. Another methodis to use 
+Principle Component Analysis (PCA) to reduce categorical data to a numerical representation. &lt;/p&gt;
+&lt;h3&gt;Categorical Encoding Using Target Statistics&lt;/h3&gt;
+&lt;p&gt;The basic idea is to map individual values of a high-cardinality categorical attribute to an estimate of the probability
+or expected values of the dependent attribute. Let's take the 'building_id' attribute from the Two Sigma Connect Rental Listing
+Competition as an example. The 'building_id' attribute is a high cardinality attribute having 7585 unique values. The target 
+variable takes 3 values: high, medium, and low. We map the individual values X&lt;sub&gt;i&lt;/sub&gt; to a scaler S&lt;sub&gt;i&lt;/sub&gt;, 
+representing an estimate of the probability of Y = c given X = X&lt;sub&gt;i&lt;/sub&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="alt text" src="images/tsc_high_cardinality.png"&gt;&lt;/p&gt;
+&lt;p&gt;Be careful of data leakage if you use cross validation. &lt;/p&gt;</content></entry><entry><title>Identifying Duplicate Quora Question Pairs (Kaggle Competition Bronze Medal)</title><link href="https://emmating.github.io/identifying-duplicate-quora-question-pairs-kaggle-competition-bronze-medal.html" rel="alternate"></link><published>2017-07-16T17:00:00-07:00</published><updated>2017-07-16T17:00:00-07:00</updated><author><name>Yanting Cao</name></author><id>tag:emmating.github.io,2017-07-16:/identifying-duplicate-quora-question-pairs-kaggle-competition-bronze-medal.html</id><summary type="html">&lt;ul&gt;
 &lt;li&gt;We explored the current methods in NLP, including word2vec embedding (gensim package in python), LSTMs(use keras neural networks API), tf-idf, python nltk package, etc. &lt;/li&gt;
 &lt;li&gt;We built machine learning models which identified duplicate Quora question pairs with high accuracy (logloss ~0.151)&lt;/li&gt;
 &lt;li&gt;We are ranked top 8% in this Kaggle …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;ul&gt;
@@ -9,7 +30,7 @@
 &lt;/ul&gt;
 &lt;h2&gt;Table of Contents&lt;/h2&gt;
 &lt;ol&gt;
-&lt;li&gt;&lt;a href="## Problem to Solve"&gt;Problem to Solve&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="## Problem Description"&gt;Problem Description&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;[Methods Overview] (## Methods Overview)&lt;/li&gt;
 &lt;li&gt;&lt;a href="## EDA of Quora Dataset"&gt;EDA of Quora Dataset&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="## Feature Engineering"&gt;Feature Engineering&lt;/a&gt;&lt;ul&gt;
@@ -23,7 +44,7 @@
 &lt;li&gt;&lt;a href="## Machine Learning Models"&gt;Machine Learning Models&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="## Model Ensemble"&gt;Model Ensemble&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
-&lt;h2&gt;Problem to Solve - Identifying Duplicate Questions&lt;/h2&gt;
+&lt;h2&gt;Problem Description - Identifying Duplicate Questions&lt;/h2&gt;
 &lt;p&gt;Quora is a question-and-answer online platform where questions are asked, answered, edited and organized 
 by its community of users. Very often, people ask differently worded questions but with the same meaning. Multiple questions
 with the same intent cause the seekers more time to find the best answers to their questions, and also cause the writers feel
